@@ -34,16 +34,9 @@ void MouseAction(DWORD flag)
 // @param dx, dy - coordinates of changing position 
 void MouseMove(int dx, int dy)
 {
-	INPUT input;
-	input.type = INPUT_MOUSE;
-	input.mi.mouseData = 0;
-	input.mi.time = 0;
 	POINT p;
 	GetCursorPos(&p);
-	input.mi.dx = dx * (65535.0f / GetSystemMetrics(SM_CXSCREEN)) + p.x * (65535.0f / GetSystemMetrics(SM_CXSCREEN));
-	input.mi.dy = dy * (65535.0f / GetSystemMetrics(SM_CYSCREEN)) + p.y * (65535.0f / GetSystemMetrics(SM_CYSCREEN));
-	input.mi.dwFlags = MOUSEEVENTF_MOVE | MOUSEEVENTF_ABSOLUTE;
-	SendInput(1, &input, sizeof(input));
+	SetCursorPos(dx + p.x, dy + p.y);
 }
 
 int main()
