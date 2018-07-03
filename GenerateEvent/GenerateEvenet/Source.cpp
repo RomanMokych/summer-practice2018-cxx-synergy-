@@ -17,6 +17,19 @@ void KeyAction(WORD vkey, DWORD flag)
 }
 
 
+// @brief Performing mouse scrolling
+// @param delta value of scrolling
+void MouseScroll(DWORD delta)
+{
+	INPUT input;
+	input.type = INPUT_MOUSE;
+	input.mi.dwFlags = MOUSEEVENTF_WHEEL;
+	input.mi.time = 0;
+	input.mi.dwExtraInfo = 0;
+	input.mi.mouseData = delta * 120;
+	SendInput(1, &input, sizeof(input));
+}
+
 // @brief Performing mouse button action
 // @param flag set of parameters which will define action
 void MouseAction(DWORD flag)
