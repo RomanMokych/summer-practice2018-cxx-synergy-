@@ -6,13 +6,15 @@
 using namespace std;
 
 int main() {
+	//string ipAddress = "10.100.26.160";
 	string ipAddress = "127.0.0.1";
 	int port = 54000;
 
 
 	WSADATA Data;
 	WORD ver = MAKEWORD(2, 2);
-	//Initialize
+	//Initializes
+
 	int wsResult = WSAStartup(ver, &Data);
 	if (wsResult != 0) {
 		cerr << "Can't initialize winsock" << endl;
@@ -42,24 +44,23 @@ int main() {
 
 //sss
 	char buf[4096];
-	string userInput;
-	do
+
+	while (true)
 	{
-		cout << "Server > ";
-		getline(cin, userInput);
-		if (userInput.size() > 0) {
-			int sendResult = send(sock, userInput.c_str(), userInput.size() + 1, 0);
-			if (sendResult != SOCKET_ERROR)
-			{
-				ZeroMemory(buf, 4096);
-				int bytesRecieved = recv(sock, buf, 4096, 0);
-				if (bytesRecieved >0)
-				{
-				cout << "Displayed on client :" << string(buf, 0, bytesRecieved) << endl;
-				}
-			}
+		ZeroMemory(buf, 4096);
+		int bytesRecieved = recv(sock, buf, 4096, 0);
+		if (bytesRecieved == SOCKET_ERROR) {
+			cerr << "Error in rcv()" << endl;
+			return 4;
 		}
-	} while (userInput.size() >0);
+		if (bytesRecieved == 0) {
+			cout << "Server disconnected" << endl;
+			break;
+
+		}
+		cout << "Server :" << string(buf, 0, bytesRecieved) << endl;
+		send(sock, buf, bytesRecieved + 1, 0);
+	}
 	//
 
 
