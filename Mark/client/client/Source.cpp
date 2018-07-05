@@ -42,23 +42,26 @@ int main() {
 
 //sss
 	char buf[4096];
-
-	while (true)
+	string userInput;
+	do
 	{
-		ZeroMemory(buf, 4096);
-		int bytesRecieved = recv(sock, buf, 4096, 0);
-		if (bytesRecieved == SOCKET_ERROR) {
-			cerr << "Error in rcv()" << endl;
-			return 4;
+		cout << "Server > ";
+		getline(cin, userInput);
+		if (userInput.size() > 0) {
+			int sendResult = send(sock, userInput.c_str(), userInput.size() + 1, 0);
+			if (sendResult != SOCKET_ERROR)
+			{
+				ZeroMemory(buf, 4096);
+				int bytesRecieved = recv(sock, buf, 4096, 0);
+				if (bytesRecieved >0)
+				{
+				cout << "Displayed on client :" << string(buf, 0, bytesRecieved) << endl;
+				}
+			}
 		}
-		if (bytesRecieved == 0) {
-			cout << "Server disconnected" << endl;
-			break;
+	} while (userInput.size() >0);
+	//
 
-		}
-		cout << "Server :" << string(buf, 0, bytesRecieved) << endl;
-		send(sock, buf, bytesRecieved + 1, 0);
-	}
 
 	closesocket(sock);
 	WSACleanup();
