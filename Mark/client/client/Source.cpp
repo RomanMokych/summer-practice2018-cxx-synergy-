@@ -30,7 +30,7 @@ int main() {
 	hint.sin_family = AF_INET;
 	hint.sin_port = htons(port);
 	inet_pton(AF_INET, ipAddress.c_str(), &hint.sin_addr);
-
+	
 	int connResult = connect(sock, (sockaddr*)&hint, sizeof(hint));
 	if (connResult == SOCKET_ERROR) {
 		cerr << "Can't connect to server" << endl;
@@ -40,25 +40,25 @@ int main() {
 	}
 
 
+//sss
 	char buf[4096];
-	string userInput;
-	do
+
+	while (true)
 	{
-		cout << "> ";
-		getline(cin, userInput);
-		if (userInput.size() > 0){
-				int sendResult = send(sock, userInput.c_str(), userInput.size() + 1, 0);
-			if (sendResult != SOCKET_ERROR)
-			{
-				ZeroMemory(buf, 4096);
-				int bytesRecieved = recv(sock, buf, 4096, 0);
-				if (bytesRecieved >0)
-				{
-					cout << "Server :" << string(buf, 0, bytesRecieved) << endl;
-				}
-			}
+		ZeroMemory(buf, 4096);
+		int bytesRecieved = recv(sock, buf, 4096, 0);
+		if (bytesRecieved == SOCKET_ERROR) {
+			cerr << "Error in rcv()" << endl;
+			return 4;
 		}
-	} while (userInput.size() >0);
+		if (bytesRecieved == 0) {
+			cout << "Server disconnected" << endl;
+			break;
+
+		}
+		cout << "Server :" << string(buf, 0, bytesRecieved) << endl;
+		send(sock, buf, bytesRecieved + 1, 0);
+	}
 
 	closesocket(sock);
 	WSACleanup();

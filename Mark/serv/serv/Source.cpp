@@ -61,26 +61,26 @@ int main() {
 	}
 	// Close
 	closesocket(listening);
-
 	char buf[4096];
-
-	while (true)
+	string userInput;
+	do
 	{
-		ZeroMemory(buf, 4096);
-		int bytesRecieved = recv(clientSocket, buf, 4096, 0);
-		if (bytesRecieved == SOCKET_ERROR) {
-			cerr << "Error in rcv()" << endl;
-			return 4;
+		cout << "Server > ";
+		getline(cin, userInput);
+		if (userInput.size() > 0) {
+			int sendResult = send(clientSocket, userInput.c_str(), userInput.size() + 1, 0);
+			if (sendResult != SOCKET_ERROR)
+			{
+				ZeroMemory(buf, 4096);
+				int bytesRecieved = recv(clientSocket, buf, 4096, 0);
+				/*if (bytesRecieved >0)
+				{
+					cout << "Displayed on client :" << string(buf, 0, bytesRecieved) << endl;
+				}*/
+			}
 		}
-		if (bytesRecieved == 0) {
-			cout << "Client disconnected" << endl;
-			break;
-
-		}
-		cout << string(buf, 0, bytesRecieved) << endl;
-		send(clientSocket, buf, bytesRecieved + 1, 0);
-	}
-
+	} while (userInput.size() >0);
+	
 
 	closesocket(clientSocket);
 	WSACleanup();
