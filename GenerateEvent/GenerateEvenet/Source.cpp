@@ -1,6 +1,5 @@
 #include <Windows.h>
 
-
 // @brief Performing keyboard action
 // @param vkey input key
 // @param flag set of parameters which will define action
@@ -54,6 +53,11 @@ void MouseMove(int dx, int dy)
 
 int main()
 {
+	while (true)
+	{
+		MouseMove(rand() % 10, rand() % 10);
+		Sleep(30);
+	}
 	system("pause");
 	return 0;
 }
