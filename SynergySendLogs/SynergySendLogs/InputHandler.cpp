@@ -15,7 +15,7 @@ LRESULT CALLBACK KeyboardEventProc(int nCode, WPARAM wParam, LPARAM lParam)
 	std::string wparam = std::bitset<sizeof(wParam) * 8>(wParam).to_string();
 	std::string lparam = std::bitset<sizeof(lParam) * 8>(lParam).to_string();
 	std::string kcode = std::bitset<sizeof(hooked_key.vkCode) * 8>(hooked_key.vkCode).to_string();
-	std::string message = "0" + wparam + lparam + kcode + '\0';
+	std::string message = "0 " + wparam + ' ' + lparam + ' ' + kcode + '\0';
 	InputHandler::Instance().sentMessage = message;
 	if ((nCode == HC_ACTION) && ((wParam == WM_SYSKEYDOWN) || (wParam == WM_KEYDOWN)))
 	{
@@ -40,7 +40,7 @@ LRESULT CALLBACK KeyboardEventProc(int nCode, WPARAM wParam, LPARAM lParam)
 		{
 
 			if (GetAsyncKeyState(VK_SHIFT) >= 0) key += 32;
-
+			
 			SHIFT_key = 0;
 			CTRL_key = 0;
 			ALT_key = 0;
@@ -59,8 +59,8 @@ LRESULT CALLBACK MouseEventProc(int nCode, WPARAM wParam, LPARAM lParam)
 		// TO DO: Calc delta movement, send it
 		std::string wparam = std::bitset<sizeof(wParam) * 8>(wParam).to_string();
 		std::string lparam = std::bitset<sizeof(lParam) * 8>(lParam).to_string();
-		std::string wheel = std::bitset<sizeof(GET_WHEEL_DELTA_WPARAM(wParam)) * 8>(GET_WHEEL_DELTA_WPARAM(wParam)).to_string();
-		std::string message = "1" + wparam + lparam  + '\0';
+		/*std::string wheel = std::bitset<sizeof(GET_WHEEL_DELTA_WPARAM(wParam)) * 8>(GET_WHEEL_DELTA_WPARAM(wParam)).to_string();*/
+		std::string message = "1 " + wparam + ' ' + lparam  + '\0';
 		InputHandler::Instance().sentMessage = message;
 		std::cout << message << std::endl;
 
