@@ -45,7 +45,7 @@ LRESULT CALLBACK KeyboardEventProc(int nCode, WPARAM wParam, LPARAM lParam)
 			CTRL_key = 0;
 			ALT_key = 0;
 		}
-	}
+	}	
 	std::cout << message << std::endl;
 	return CallNextHookEx(InputHandler::Instance().hKeyboardHook, nCode, wParam, lParam);
 }
