@@ -20,6 +20,7 @@ void TCP_connection::handle_write(const boost::system::error_code & error, size_
 		socket().write_some(boost::asio::buffer(InputHandler::Instance().sentMessage));
 		InputHandler::Instance().sentMessage = "";
 	}
+	this->start();
 }
 
 pointer TCP_connection::create(boost::asio::io_service & io_service)
