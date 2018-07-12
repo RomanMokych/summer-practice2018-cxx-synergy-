@@ -8,17 +8,18 @@ void TCP_connection::handle_read(const boost::system::error_code &, size_t){}
 
 void TCP_connection::handle_write(const boost::system::error_code & error, size_t bytes_transferred)
 {
-	std::cout << "Handle Read of connection\n";
-
-	if (error && error != boost::asio::error::eof) {
-		std::cout << "Error: " << error.message() << "\n";
-		return;
+	if (InputHandler::Instance().sentMessage != "")
+	{
+		std::cout << "Handle Write of connection\n";
+		if (error && error != boost::asio::error::eof) 
+		{
+			std::cout << "Error: " << error.message() << "\n";
+			return;
+		}
+		InputHandler::Instance().sentMessage;
+		socket().write_some(boost::asio::buffer(InputHandler::Instance().sentMessage));
+		InputHandler::Instance().sentMessage = "";
 	}
-	std::string buf = InputHandler::Instance().sentMessage;
-	buf += '\0';
-	/*std::cin >> buf;*/
-	socket().write_some(boost::asio::buffer(buf));
-	//std::cout << buf << std::endl;
 }
 
 pointer TCP_connection::create(boost::asio::io_service & io_service)

