@@ -16,6 +16,7 @@ using boost::asio::ip::tcp;
 class InputHandler
 {
 public:
+	bool isCurrentComputerDisabled;
 	HHOOK hKeyboardHook;
 	HHOOK hMouseHook;
 	POINT mousePosition;

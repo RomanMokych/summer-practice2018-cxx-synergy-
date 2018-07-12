@@ -20,14 +20,15 @@ LRESULT CALLBACK KeyboardEventProc(int nCode, WPARAM wParam, LPARAM lParam)
 		std::string message = "0 " + wparam + ' ' + lparam + ' ' + kcode + '\0';
 		InputHandler::Instance().sentMessage = message;
 		std::cout << message << std::endl;
-		return CallNextHookEx(InputHandler::Instance().hKeyboardHook, nCode, wParam, lParam);
+		return (InputHandler::Instance().isCurrentComputerDisabled ? 1 : CallNextHookEx(InputHandler::Instance().hKeyboardHook, nCode, wParam, lParam));
 	}
 }
 
 LRESULT CALLBACK MouseEventProc(int nCode, WPARAM wParam, LPARAM lParam)
 {
 	MOUSEHOOKSTRUCT * pMouseStruct = (MOUSEHOOKSTRUCT *)lParam;
-	if (pMouseStruct != NULL) {
+	if (pMouseStruct != NULL)
+	{
 		std::string wparam = std::bitset<sizeof(wParam) * 8>(wParam).to_string();
 		std::string lparam = std::bitset<sizeof(lParam) * 8>(lParam).to_string();
 		POINT newPosition;
@@ -39,9 +40,8 @@ LRESULT CALLBACK MouseEventProc(int nCode, WPARAM wParam, LPARAM lParam)
 		InputHandler::Instance().sentMessage = message;
 		GetCursorPos(&InputHandler::Instance().mousePosition);
 		std::cout << message << std::endl;
-
+		return (InputHandler::Instance().isCurrentComputerDisabled ? 1 : CallNextHookEx(InputHandler::Instance().hKeyboardHook, nCode, wParam, lParam));
 	}
-	return CallNextHookEx(InputHandler::Instance().hMouseHook, nCode, wParam, lParam);
 }
 
 void InputHandler::MyMouseLogger()
@@ -78,9 +78,10 @@ void InputHandler::Run()
 {
 	try
 	{
-		GetCursorPos(&InputHandler::Instance().mousePosition);
-		std::thread mouseThread(&InputHandler::MyMouseLogger, InputHandler::Instance());
-		std::thread keyboardThread(&InputHandler::MyKeyboardLogger, InputHandler::Instance());
+		isCurrentComputerDisabled = false;
+		GetCursorPos(&mousePosition);
+		std::thread mouseThread(&InputHandler::MyMouseLogger, this);
+		std::thread keyboardThread(&InputHandler::MyKeyboardLogger, this);
 
 		mouseThread.join();
 		keyboardThread.join();
