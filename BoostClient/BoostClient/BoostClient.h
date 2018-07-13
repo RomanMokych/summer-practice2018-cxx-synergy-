@@ -1,29 +1,33 @@
 #pragma once
+#include <boost/bind.hpp>
 #include <boost/asio.hpp>
+#include <bitset>
+#include <boost/asio/read_until.hpp>
+#include "Emulator.h"
 #include <string>
 #include <locale>
 #include <iostream>
-#include <boost/bind.hpp>
-#include <bitset>
-#include <boost/asio/read_until.hpp>
 
 using  boost::asio::ip::tcp;
 
-class BoostClient
+class BClient
 {
 public:
-	BoostClient(boost::asio::io_service& io_service);
-	~BoostClient();
+	BClient(boost::asio::io_service& io_service);
+	~BClient();
+
 	void Connect(boost::asio::ip::tcp::endpoint& endpoint);
 private:
 	void PostReceive();
 	void handle_connect(const boost::system::error_code& error);
 	void handle_receive(const boost::system::error_code& error, size_t bytes_transferred);
-
+	void ParseMSG();
 	boost::asio::ip::tcp::socket m_Socket;
 
 	int m_nSeqNumber;
 	char buff[1024];
 	std::string m_WriteMessage;
+	std::string strRecvMessage;
+
 };
 
