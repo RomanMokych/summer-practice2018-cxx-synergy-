@@ -1,5 +1,4 @@
 #pragma once
-#include "stdafx.h"
 #include <boost/asio.hpp>
 #include <string>
 #include <locale>
@@ -20,8 +19,7 @@ private:
 	void PostReceive();
 	void handle_connect(const boost::system::error_code& error);
 	void handle_receive(const boost::system::error_code& error, size_t bytes_transferred);
-	
-	boost::asio::io_service& m_io_service;
+
 	boost::asio::ip::tcp::socket m_Socket;
 
 	int m_nSeqNumber;

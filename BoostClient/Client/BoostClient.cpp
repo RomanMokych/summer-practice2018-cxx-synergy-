@@ -1,11 +1,17 @@
 #include "BoostClient.h"
 
-BoostClient::BoostClient(boost::asio::io_service& io_service)
+BoostClient::BoostClient(boost::asio::io_service& io_service) : m_Socket(io_service)
 {
 }
 
 BoostClient::~BoostClient()
 {
+}
+void BoostClient::Connect(boost::asio::ip::tcp::endpoint & endpoint)
+{
+	m_Socket.async_connect(endpoint,
+		boost::bind(&BoostClient::handle_connect, this,
+			boost::asio::placeholders::error));
 }
 void BoostClient::PostReceive()
 {
