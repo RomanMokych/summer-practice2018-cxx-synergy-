@@ -16,9 +16,16 @@ void TCP_connection::handle_write(const boost::system::error_code & error, size_
 			std::cout << "Error: " << error.message() << "\n";
 			return;
 		}
-		InputHandler::Instance().sentMessage;
-		socket().write_some(boost::asio::buffer(InputHandler::Instance().sentMessage));
-		InputHandler::Instance().sentMessage = "";
+		try
+		{
+			socket().write_some(boost::asio::buffer(InputHandler::Instance().sentMessage));
+			InputHandler::Instance().sentMessage = "";
+		}
+		catch (std::exception &ex)
+		{
+			std::cout << "Client disconnected" << std::endl;
+			return;
+		}
 	}
 	this->start();
 }
