@@ -3,7 +3,7 @@
 using boost::asio::ip::tcp;
 
 
-const char SERVER_IP[] = "10.100.26.21";
+const char SERVER_IP[] = "192.168.0.121";
 const unsigned short PORT_NUMBER = 8080;
 boost::asio::ip::tcp::endpoint endpoint(boost::asio::ip::address::from_string(SERVER_IP), PORT_NUMBER);
 

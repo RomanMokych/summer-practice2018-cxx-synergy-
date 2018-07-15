@@ -82,18 +82,13 @@ void BClient::ParseMSG()
 		int lval = lparbits.to_ulong();
 
 		std::bitset<16> xbits(mouse[3]);
-		int xval = xbits.to_ulong();
+		short xval = (short)xbits.to_ulong();
+		std::cout << xval << std::endl;
 
 		std::bitset<16> ybits(mouse[4]);
-		int yval = ybits.to_ulong();
-		if (xval != 0 || yval != 0)
-		{
-			Emulator::MouseMove(xval, yval);
-		}
-		else
-		{
-			Emulator::MouseAction((WPARAM)(DWORD)wval);
-		}
+		short yval = (short)ybits.to_ulong();
+		std::cout << yval << std::endl;
+
 	}
 	else
 	{
