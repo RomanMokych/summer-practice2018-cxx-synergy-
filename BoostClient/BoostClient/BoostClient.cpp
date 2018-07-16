@@ -58,7 +58,7 @@ void BClient::handle_receive(const boost::system::error_code& error, size_t byte
 	{
 		strRecvMessage = buff;
 		ParseMSG();
-		std::cout << "Message from server : " << strRecvMessage << std::endl;
+		std::cout << "Message from server : " << strRecvMessage.front() << std::endl;
 		PostReceive();
 	}
 }
@@ -66,28 +66,30 @@ void BClient::handle_receive(const boost::system::error_code& error, size_t byte
 void BClient::ParseMSG()
 {
 	std::istringstream iss;
-	iss.str(strRecvMessage);
+	std::string movax = strRecvMessage;
+	iss.str(movax);
 
-	if (strRecvMessage[0] == '1')
+	if (movax[0] == '1')
 	{
 		std::string mouse[5] = { " " };
 		for (size_t i = 0; i < 5; i++)
 		{
 			iss >> mouse[i];
 		}
-		std::bitset<32> wparbits(mouse[1]);
-		int wval = wparbits.to_ulong();
+		int wval = atoi(mouse[1].c_str());
 
-		std::bitset<32> lparbits(mouse[2]);
-		int lval = lparbits.to_ulong();
+		int lval = atoi(mouse[2].c_str());
 
-		std::bitset<16> xbits(mouse[3]);
-		short xval = (short)xbits.to_ulong();
-		std::cout << xval << std::endl;
+		short xval = (short)atoi(mouse[3].c_str());
+		//short xval = (short)xbits.to_ulong();
+		//std::cout << xval << std::endl;
 
-		std::bitset<16> ybits(mouse[4]);
-		short yval = (short)ybits.to_ulong();
-		std::cout << yval << std::endl;
+		short yval = (short)atoi(mouse[4].c_str());
+		//short yval = (short)ybits.to_ulong();
+		//std::cout << yval << std::endl;
+
+		Emulator::MouseMove(xval,yval);
+		Emulator::MouseAction(wval);
 
 	}
 	else
@@ -98,15 +100,13 @@ void BClient::ParseMSG()
 		{
 			iss >> code[i];
 		}
-		std::bitset<32> wparbits(code[1]);
-		int wval = wparbits.to_ulong();
+		int wval = atoi(code[1].c_str());
 
-		std::bitset<32> lparbits(code[2]);
-		int lval = lparbits.to_ulong();
+		int lval = atoi(code[2].c_str());
 
-		std::bitset<16> kbits(code[3]);
-		unsigned short val = kbits.to_ulong();
-		Emulator::KeyAction(val, (WPARAM)(DWORD)wval);
+		unsigned short val = (unsigned short)atoi(code[3].c_str());
+		//Emulator::KeyAction(val, (WPARAM)(DWORD)wval);
+	
 	}
 }
 
