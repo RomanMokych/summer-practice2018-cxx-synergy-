@@ -9,13 +9,14 @@
 #include <thread>
 #include <iostream>
 #include <cstdlib>
-#include <bitset>
+#include <queue>
 
 using boost::asio::ip::tcp;
 
 class InputHandler
 {
 public:
+	bool hasConnection;
 	bool isCurrentComputerDisabled;
 	HHOOK hKeyboardHook;
 	HHOOK hMouseHook;
@@ -25,7 +26,7 @@ public:
 	void MyKeyboardLogger();
 	void MessageLoop();
 	void Run();
-	std::string sentMessage;
+	std::queue<std::string> sentMessage;
 };
 LRESULT CALLBACK KeyboardEventProc(int nCode, WPARAM wParam, LPARAM lParam);
 LRESULT CALLBACK MouseEventProc(int nCode, WPARAM wParam, LPARAM lParam);

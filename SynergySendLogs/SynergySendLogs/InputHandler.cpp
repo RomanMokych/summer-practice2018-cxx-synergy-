@@ -15,8 +15,10 @@ LRESULT CALLBACK KeyboardEventProc(int nCode, WPARAM wParam, LPARAM lParam)
 		std::string lparam = std::to_string(lParam);
 		std::string kcode = std::to_string(hooked_key->vkCode);
 		std::string message = "0 " + wparam + ' ' + lparam + ' ' + kcode + '\0';
-		std::cout << message << std::endl;
-		InputHandler::Instance().sentMessage = message;
+		if (InputHandler::Instance().hasConnection)
+		{
+			InputHandler::Instance().sentMessage.push(message);
+		}
 		return (InputHandler::Instance().isCurrentComputerDisabled ? 1 : CallNextHookEx(InputHandler::Instance().hKeyboardHook, nCode, wParam, lParam));
 	}
 }
@@ -32,9 +34,11 @@ LRESULT CALLBACK MouseEventProc(int nCode, WPARAM wParam, LPARAM lParam)
 		short dy = pMouseStruct->pt.y - InputHandler::Instance().mousePosition.y;
 		std::string delta = std::to_string(dx) + ' ' + std::to_string(dy);
 		std::string message = "1 " + wparam + ' ' + lparam + ' ' + delta  + '\0';
-		InputHandler::Instance().sentMessage = message;
+		if (InputHandler::Instance().hasConnection)
+		{
+			InputHandler::Instance().sentMessage.push(message);
+		}
 		GetCursorPos(&InputHandler::Instance().mousePosition);
-		std::cout << message << std::endl;
 		return (InputHandler::Instance().isCurrentComputerDisabled ? 1 : CallNextHookEx(InputHandler::Instance().hKeyboardHook, nCode, wParam, lParam));
 	}
 }
@@ -71,18 +75,4 @@ void InputHandler::MessageLoop()
 
 void InputHandler::Run()
 {
-	try
-	{
-		isCurrentComputerDisabled = false;
-		GetCursorPos(&mousePosition);
-		std::thread mouseThread(&InputHandler::MyMouseLogger, this);
-		std::thread keyboardThread(&InputHandler::MyKeyboardLogger, this);
-
-		mouseThread.join();
-		keyboardThread.join();
-	}
-	catch (const std::exception &ex)
-	{
-		std::cout << ex.what() << std::endl;
-	}
 }

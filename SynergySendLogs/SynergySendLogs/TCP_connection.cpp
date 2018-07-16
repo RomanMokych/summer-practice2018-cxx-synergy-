@@ -20,19 +20,22 @@ tcp::socket & TCP_connection::socket()
 
 void TCP_connection::start()
 {
-	while (true)
+	InputHandler::Instance().hasConnection = true;
+	while (InputHandler::Instance().hasConnection)
 	{
-		if (InputHandler::Instance().sentMessage != "")
+		if (!InputHandler::Instance().sentMessage.empty())
 		{
 			try
 			{
+				std::cout << InputHandler::Instance().sentMessage.front() << std::endl;
 				boost::asio::write(socket(),
-				boost::asio::buffer(InputHandler::Instance().sentMessage));
-				InputHandler::Instance().sentMessage = "";
+				boost::asio::buffer(InputHandler::Instance().sentMessage.front()));
+				InputHandler::Instance().sentMessage.pop();
 			}
 			catch (std::exception &ex)
 			{
 				std::cout << "Client disconnected" << std::endl;
+				InputHandler::Instance().hasConnection = false;
 				return;
 			}
 		}
