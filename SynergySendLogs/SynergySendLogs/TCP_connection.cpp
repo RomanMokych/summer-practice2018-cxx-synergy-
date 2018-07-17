@@ -2,11 +2,11 @@
 
 typedef boost::shared_ptr<TCP_connection> pointer;
 
-TCP_connection::TCP_connection(boost::asio::io_service& io_service) : socket_(io_service){}
+TCP_connection::TCP_connection(boost::asio::io_service& io_service) : socket_(io_service) {}
 
-void TCP_connection::handle_read(const boost::system::error_code &, size_t){}
+void TCP_connection::handle_read(const boost::system::error_code &, size_t) {}
 
-void TCP_connection::handle_write(const boost::system::error_code & error, size_t bytes_transferred){}
+void TCP_connection::handle_write(const boost::system::error_code & error, size_t bytes_transferred) {}
 
 pointer TCP_connection::create(boost::asio::io_service & io_service)
 {
@@ -22,7 +22,6 @@ void TCP_connection::start()
 {
 	boost::asio::ip::tcp::no_delay noDelayOption(true);
 	socket_.set_option(noDelayOption);
-	InputHandler::Instance().isCurrentComputerDisabled = true;
 	InputHandler::Instance().hasConnection = true;
 	while (InputHandler::Instance().hasConnection)
 	{
@@ -32,7 +31,7 @@ void TCP_connection::start()
 			{
 				std::cout << InputHandler::Instance().sentMessage.front() << std::endl;
 				boost::asio::write(socket(),
-				boost::asio::buffer(InputHandler::Instance().sentMessage.front()));
+					boost::asio::buffer(InputHandler::Instance().sentMessage.front()));
 				InputHandler::Instance().sentMessage.pop();
 			}
 			catch (std::exception &ex)
