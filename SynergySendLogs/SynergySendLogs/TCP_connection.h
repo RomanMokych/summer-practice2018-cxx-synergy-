@@ -1,5 +1,7 @@
 #pragma once
 #include "InputHandler.h"
+#include <mutex>
+#include <condition_variable>
 
 class TCP_connection : public boost::enable_shared_from_this<TCP_connection>
 {
@@ -11,7 +13,10 @@ private:
 	tcp::socket socket_;
 	boost::asio::streambuf message_;
 	std::string response_message_ = "1";
+
 public:
+	
+
 	typedef boost::shared_ptr<TCP_connection> pointer;
 	static pointer create(boost::asio::io_service& io_service);
 	tcp::socket& socket();

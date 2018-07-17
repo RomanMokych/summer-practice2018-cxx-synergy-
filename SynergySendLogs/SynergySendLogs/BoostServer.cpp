@@ -16,7 +16,7 @@ void BoostServer::handle_accept(TCP_connection::pointer new_connection, const bo
 	if (!error)
 	{
 		std::cout << "A client connected" << std::endl;
-		new_connection->start();
+		std::thread(&TCP_connection::start, new_connection).detach();
 	}
 
 	start_accept();

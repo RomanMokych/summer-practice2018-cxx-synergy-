@@ -20,6 +20,9 @@ tcp::socket & TCP_connection::socket()
 
 void TCP_connection::start()
 {
+	boost::asio::ip::tcp::no_delay noDelayOption(true);
+	socket_.set_option(noDelayOption);
+	InputHandler::Instance().isCurrentComputerDisabled = true;
 	InputHandler::Instance().hasConnection = true;
 	while (InputHandler::Instance().hasConnection)
 	{
@@ -36,6 +39,7 @@ void TCP_connection::start()
 			{
 				std::cout << "Client disconnected" << std::endl;
 				InputHandler::Instance().hasConnection = false;
+				InputHandler::Instance().isCurrentComputerDisabled = false;
 				return;
 			}
 		}
