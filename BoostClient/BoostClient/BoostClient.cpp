@@ -58,7 +58,7 @@ void BClient::handle_receive(const boost::system::error_code& error, size_t byte
 	{
 		strRecvMessage = buff;
 		ParseMSG();
-		std::cout << "Message from server : " << strRecvMessage.front() << std::endl;
+		std::cout << "Message from server : " << strRecvMessage<< std::endl;
 		PostReceive();
 	}
 }
@@ -66,10 +66,10 @@ void BClient::handle_receive(const boost::system::error_code& error, size_t byte
 void BClient::ParseMSG()
 {
 	std::istringstream iss;
-	std::string movax = strRecvMessage;
-	iss.str(movax);
+	
+	iss.str(strRecvMessage);
 
-	if (movax[0] == '1')
+	if (strRecvMessage[0] == '1')
 	{
 		std::string mouse[5] = { " " };
 		for (size_t i = 0; i < 5; i++)
@@ -89,7 +89,7 @@ void BClient::ParseMSG()
 		//std::cout << yval << std::endl;
 
 		Emulator::MouseMove(xval,yval);
-		Emulator::MouseAction(wval);
+		//Emulator::MouseAction(wval);
 
 	}
 	else
@@ -102,10 +102,15 @@ void BClient::ParseMSG()
 		}
 		int wval = atoi(code[1].c_str());
 
+		if (wval == 257)
+		{
+			return;
+		}
+
 		int lval = atoi(code[2].c_str());
 
 		unsigned short val = (unsigned short)atoi(code[3].c_str());
-		//Emulator::KeyAction(val, (WPARAM)(DWORD)wval);
+		Emulator::KeyAction(val, (WPARAM)(DWORD)wval);
 	
 	}
 }
