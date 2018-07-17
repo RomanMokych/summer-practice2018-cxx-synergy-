@@ -1,5 +1,6 @@
 #include "BoostClient.h"
 #include "BoostServer.h"
+#include <conio.h>
 
 
 void Server() {
@@ -45,9 +46,19 @@ void Client() {
 
 
 int main() {
-	Server();
-
-
+	char choice;
+	std::cout << "1 for server" << std::endl;
+	std::cout << "2 for client" << std::endl;
+	choice = _getch();
+	switch (choice)
+	{
+	case '1':
+		Server();
+		break;
+	case '2':
+		Client();
+		break;
+	}
 	system("pause");
 	return 0;	
 }

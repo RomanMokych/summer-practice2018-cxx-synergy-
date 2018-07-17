@@ -76,22 +76,19 @@ void BClient::ParseMSG()
 			iss >> mouse[i];
 		}
 		int wval = atoi(mouse[1].c_str());
-
 		int lval = atoi(mouse[2].c_str());
 
 		short xval = (short)atoi(mouse[3].c_str());
-		//short xval = (short)xbits.to_ulong();
-		//std::cout << xval << std::endl;
-
 		short yval = (short)atoi(mouse[4].c_str());
-		//short yval = (short)ybits.to_ulong();
-		//std::cout << yval << std::endl;
 
-		//Emulator::MouseMove(xval,yval);
-		//Emulator::MouseAction(wval);
+		Emulator::MouseMove(xval,yval);
+		if (wval != MOUSEEVENTF_MOVE)
+		{
+			Emulator::MouseAction(wval);
+		}
 
 	}
-	else
+	else if (strRecvMessage[0] == '0')
 	{
 		std::string code[4] = { " " };
 
@@ -100,17 +97,23 @@ void BClient::ParseMSG()
 			iss >> code[i];
 		}
 		int wval = atoi(code[1].c_str());
-
-		if (wval == 257)
-		{
-			return;
-		}
-
 		int lval = atoi(code[2].c_str());
 
 		unsigned short val = (unsigned short)atoi(code[3].c_str());
 		Emulator::KeyAction(val, (WPARAM)(DWORD)lval);
-	
+	}
+	else if (strRecvMessage[0] == '2')
+	{
+		std::string mouse[4] = { " " };
+		for (size_t i = 0; i < 4; i++)
+		{
+			iss >> mouse[i];
+		}
+		int wval = atoi(mouse[1].c_str());
+		int lval = atoi(mouse[2].c_str());
+
+		DWORD delta = atoi(mouse[3].c_str());
+		Emulator::MouseScroll(delta);
 	}
 }
 
