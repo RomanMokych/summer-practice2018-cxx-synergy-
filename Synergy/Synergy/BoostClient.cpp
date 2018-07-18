@@ -35,6 +35,7 @@ void BClient::handle_connect(const boost::system::error_code& error)
 	}
 	else
 	{
+		InputHandler::Instance().hasConnection = true;
 		std::cout << "connected" << std::endl;
 		PostReceive();
 	}
@@ -47,6 +48,7 @@ void BClient::handle_receive(const boost::system::error_code& error, size_t byte
 	{
 		if (error == boost::asio::error::eof)
 		{
+			InputHandler::Instance().hasConnection = false;
 			std::cout << "Disconnect" << std::endl;
 		}
 		else

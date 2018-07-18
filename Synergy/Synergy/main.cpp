@@ -8,8 +8,8 @@ void Server() {
 	{
 		InputHandler::Instance().hasConnection = InputHandler::Instance().isCurrentComputerDisabled = false;
 		GetCursorPos(&InputHandler::Instance().mousePosition);
-		std::thread mouseThread(&InputHandler::MyMouseLogger, InputHandler::Instance());
-		std::thread keyboardThread(&InputHandler::MyKeyboardLogger, InputHandler::Instance());
+		std::thread mouseThread(&InputHandler::ServerMouseLogger, InputHandler::Instance());
+		std::thread keyboardThread(&InputHandler::ServerKeyboardLogger, InputHandler::Instance());
 		boost::asio::io_service io_service;
 		BoostServer server(io_service);
 		io_service.run();
@@ -33,13 +33,17 @@ void Client() {
 	std::string Server_IP = " ";
 	std::cin >> Server_IP;
 	boost::asio::ip::tcp::endpoint endpoint(boost::asio::ip::address::from_string(Server_IP), PORT_NUMBER);
-
+	std::thread mouseThread(&InputHandler::ClientMouseLogger, InputHandler::Instance());
+	std::thread keyboardThread(&InputHandler::ClientKeyboardLogger, InputHandler::Instance());
 
 	boost::asio::io_service io_service;
 	BClient client(io_service);
 	client.Connect(endpoint);
 	boost::system::error_code ec;
 	io_service.run(ec);
+
+	mouseThread.join();
+	keyboardThread.join();
 	if (ec) std::cout << "io_service error No: " << ec.value() << " error Message: " << ec.message() << std::endl;
 
 }

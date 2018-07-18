@@ -22,11 +22,13 @@ public:
 	HHOOK hMouseHook;
 	POINT mousePosition;
 	static InputHandler& Instance();
-	void MyMouseLogger();
-	void MyKeyboardLogger();
+	void ServerMouseLogger();
+	void ServerKeyboardLogger();
+	void ClientKeyboardLogger();
+	void ClientMouseLogger();
 	void MessageLoop();
-	void Run();
+	int GetMouseAction(WPARAM wParam);
+	int GetKeyBoardAction(WPARAM wParam);
+	bool MouseEventProcOutOfBorder(int nCode, WPARAM wParam, LPARAM lParam);
 	std::queue<std::string> sentMessage;
 };
-LRESULT CALLBACK KeyboardEventProc(int nCode, WPARAM wParam, LPARAM lParam);
-LRESULT CALLBACK MouseEventProc(int nCode, WPARAM wParam, LPARAM lParam);

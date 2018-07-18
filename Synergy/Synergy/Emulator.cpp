@@ -45,7 +45,5 @@ void Emulator::MouseAction(DWORD flag)
 // @param dx, dy - coordinates of changing position 
 void Emulator::MouseMove(int dx, int dy)
 {
-	POINT p;
-	GetCursorPos(&p);
-	SetCursorPos(dx + p.x, dy + p.y);
+	mouse_event(MOUSEEVENTF_MOVE | MOUSEEVENTF_MOVE_NOCOALESCE, dx, dy, 0, 0);
 }
