@@ -208,6 +208,25 @@ bool InputHandler::MouseEventProcOutOfBorder(int nCode, WPARAM wParam, LPARAM lP
 			GetCursorPos(&InputHandler::Instance().mousePosition);
 			return true;
 		}
+		if (pMouseStruct->pt.y < 0 && P.y == 0 && !InputHandler::Instance().isCurrentComputerDisabled)
+		{
+			InputHandler::Instance().isCurrentComputerDisabled = true;
+			yCoord = (float)P.x / GetSystemMetrics(SM_CXSCREEN);
+			InputHandler::Instance().sentMessage.push("5 " + std::to_string(yCoord));
+			SetCursorPos(GetSystemMetrics(SM_CXSCREEN), GetSystemMetrics(SM_CYSCREEN));
+			GetCursorPos(&InputHandler::Instance().mousePosition);
+			return true;
+		}
+		if (pMouseStruct->pt.y > 0 && P.y == GetSystemMetrics(SM_CYSCREEN) - 1 && !InputHandler::Instance().isCurrentComputerDisabled)
+		{
+			InputHandler::Instance().isCurrentComputerDisabled = true;
+			yCoord = (float)P.x / GetSystemMetrics(SM_CXSCREEN);
+			InputHandler::Instance().sentMessage.push("6 " + std::to_string(yCoord));
+			SetCursorPos(GetSystemMetrics(SM_CXSCREEN), GetSystemMetrics(SM_CYSCREEN));
+			GetCursorPos(&InputHandler::Instance().mousePosition);
+			return true;
+		}
+		
 	}
 	return false;
 }
