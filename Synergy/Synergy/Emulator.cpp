@@ -45,5 +45,99 @@ void Emulator::MouseAction(DWORD flag)
 // @param dx, dy - coordinates of changing position 
 void Emulator::MouseMove(int dx, int dy)
 {
-	mouse_event(MOUSEEVENTF_MOVE | MOUSEEVENTF_MOVE_NOCOALESCE, dx, dy, 0, 0);
+	mouse_event(MOUSEEVENTF_MOVE | 0x2000, dx, dy, 0, 0);
+}
+
+void Emulator::ParseMSG(std::string strRecvMessage)
+{
+	std::istringstream iss;
+	iss.str(strRecvMessage);
+
+	if (strRecvMessage[0] == '1')
+	{
+		std::string mouse[5] = { " " };
+		for (size_t i = 0; i < 5; i++)
+		{
+			iss >> mouse[i];
+		}
+		int wval = atoi(mouse[1].c_str());
+		int lval = atoi(mouse[2].c_str());
+
+		short xval = (short)atoi(mouse[3].c_str());
+		short yval = (short)atoi(mouse[4].c_str());
+
+		Emulator::MouseMove(xval, yval);
+		if (wval != MOUSEEVENTF_MOVE)
+		{
+			Emulator::MouseAction(wval);
+		}
+
+	}
+	else if (strRecvMessage[0] == '0')
+	{
+		std::string code[4] = { " " };
+
+		for (int i = 0; i < 4; i++)
+		{
+			iss >> code[i];
+		}
+		int wval = atoi(code[1].c_str());
+		int lval = atoi(code[2].c_str());
+
+		unsigned short val = (unsigned short)atoi(code[3].c_str());
+		Emulator::KeyAction(val, (WPARAM)(DWORD)lval);
+	}
+	else if (strRecvMessage[0] == '2')
+	{
+		std::string mouse[4] = { " " };
+		for (size_t i = 0; i < 4; i++)
+		{
+			iss >> mouse[i];
+		}
+		int wval = atoi(mouse[1].c_str());
+		int lval = atoi(mouse[2].c_str());
+
+		DWORD delta = atoi(mouse[3].c_str());
+		Emulator::MouseScroll(delta);
+	}
+	else if (strRecvMessage[0] == '3')
+	{
+		std::string mouse[2] = { " " };
+		for (size_t i = 0; i < 2; i++)
+		{
+			iss >> mouse[i];
+		}
+		float wval = atof(mouse[1].c_str());
+		std::cout << "HUY :" << wval << std::endl;
+		int yval = wval * GetSystemMetrics(SM_CYSCREEN);
+		std::cout << "PIZDA :" << yval << std::endl;
+		InputHandler::Instance().isCurrentComputerDisabled = false;
+		INPUT input;
+		input.type = INPUT_MOUSE;
+		input.mi.mouseData = 0;
+		input.mi.dx = (GetSystemMetrics(SM_CXSCREEN) - 1)*(65536 / GetSystemMetrics(SM_CXSCREEN)); //x being coord in pixels
+		input.mi.dy = yval * (65536 / GetSystemMetrics(SM_CYSCREEN)); //y being coord in pixels
+		input.mi.dwFlags = MOUSEEVENTF_ABSOLUTE | MOUSEEVENTF_MOVE;
+		SendInput(1, &input, sizeof(input));
+	}
+	else if (strRecvMessage[0] == '4')
+	{
+		std::string mouse[2] = { " " };
+		for (size_t i = 0; i < 2; i++)
+		{
+			iss >> mouse[i];
+		}
+		float wval = atof(mouse[1].c_str());
+		std::cout << "HUY :" << wval << std::endl;
+		int yval = wval * GetSystemMetrics(SM_CYSCREEN);
+		std::cout << "PIZDA :" << yval << std::endl;
+		InputHandler::Instance().isCurrentComputerDisabled = false;
+		INPUT input;
+		input.type = INPUT_MOUSE;
+		input.mi.mouseData = 0;
+		input.mi.dx = 0;//x being coord in pixels
+		input.mi.dy = yval * (65536 / GetSystemMetrics(SM_CYSCREEN)); //y being coord in pixels
+		input.mi.dwFlags = MOUSEEVENTF_ABSOLUTE | MOUSEEVENTF_MOVE;
+		SendInput(1, &input, sizeof(input));
+	}
 }

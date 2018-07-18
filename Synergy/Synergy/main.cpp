@@ -53,7 +53,7 @@ int main() {
 	char choice;
 	std::cout << "1 for server" << std::endl;
 	std::cout << "2 for client" << std::endl;
-	choice = _getch();
+	std::cin >> choice;
 	switch (choice)
 	{
 	case '1':

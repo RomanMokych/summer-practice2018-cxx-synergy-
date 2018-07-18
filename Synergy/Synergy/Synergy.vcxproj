@@ -70,12 +70,12 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>C:\boost_1_67_0\;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\boost_1_67_0\;$(LibraryPath)</LibraryPath>
+    <IncludePath>E:\C++\boost_1_67_0;C:\boost_1_67_0\;$(IncludePath)</IncludePath>
+    <LibraryPath>E:\C++\boost_1_67_0;C:\boost_1_67_0\;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <IncludePath>C:\boost_1_67_0\;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\boost_1_67_0\;$(LibraryPath)</LibraryPath>
+    <IncludePath>E:\C++\boost_1_67_0;C:\boost_1_67_0\;$(IncludePath)</IncludePath>
+    <LibraryPath>E:\C++\boost_1_67_0;C:\boost_1_67_0\;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <IncludePath>C:\boost_1_67_0;$(IncludePath)</IncludePath>
@@ -93,7 +93,7 @@
       <ConformanceMode>true</ConformanceMode>
     </ClCompile>
     <Link>
-      <AdditionalLibraryDirectories>C:\boost_1_67_0\stage\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>E:\C++\boost_1_67_0\stage\lib;C:\boost_1_67_0\stage\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -119,7 +119,7 @@
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalLibraryDirectories>C:\boost_1_67_0\stage\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>E:\C++\boost_1_67_0\stage\lib;C:\boost_1_67_0\stage\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">

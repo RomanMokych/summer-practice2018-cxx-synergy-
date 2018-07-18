@@ -1,5 +1,9 @@
 #pragma once
-#include <Windows.h>
+
+#include <sstream>
+#include "InputHandler.h"
+
+
 static class Emulator
 {
 public:
@@ -7,5 +11,6 @@ public:
 	static void MouseScroll(DWORD delta);
 	static void MouseAction(DWORD flag);
 	static void MouseMove(int dx, int dy);
+	static void ParseMSG(std::string strRecvMessage);
 };
 
