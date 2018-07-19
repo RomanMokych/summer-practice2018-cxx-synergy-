@@ -19,6 +19,10 @@ LRESULT CALLBACK KeyboardEventProcServer(int nCode, WPARAM wParam, LPARAM lParam
 		std::string wparam = std::to_string(InputHandler::Instance().GetKeyBoardAction(wParam));
 		std::string lparam = std::to_string(lParam);
 		std::string kcode = std::to_string(hooked_key->vkCode);
+
+		if (hooked_key->vkCode == VK_LCONTROL && 0x51) { 
+			exit(0); 
+		}
 		if (wparam != "2")
 		{
 			std::string message = "0 " + wparam + ' ' + lparam + ' ' + kcode + '\0';
@@ -35,12 +39,9 @@ LRESULT CALLBACK MouseEventProcClient(int nCode, WPARAM wParam, LPARAM lParam)
 	MOUSEHOOKSTRUCT * pMouseStruct = (MOUSEHOOKSTRUCT *)lParam;
 	if (pMouseStruct != NULL)
 	{
-		if (InputHandler::Instance().hasConnection)
+		if (InputHandler::Instance().MouseEventProcOutOfBorder(nCode, wParam, lParam))
 		{
-			if (InputHandler::Instance().MouseEventProcOutOfBorder(nCode, wParam, lParam))
-			{
-				InputHandler::Instance().isCurrentComputerDisabled = true;
-			}
+			InputHandler::Instance().isCurrentComputerDisabled = true;
 		}
 	}
 	return (InputHandler::Instance().isCurrentComputerDisabled ? 1 : CallNextHookEx(InputHandler::Instance().hKeyboardHook, nCode, wParam, lParam));
