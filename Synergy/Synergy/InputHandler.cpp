@@ -19,6 +19,10 @@ LRESULT CALLBACK KeyboardEventProcServer(int nCode, WPARAM wParam, LPARAM lParam
 		std::string wparam = std::to_string(InputHandler::Instance().GetKeyBoardAction(wParam));
 		std::string lparam = std::to_string(lParam);
 		std::string kcode = std::to_string(hooked_key->vkCode);
+
+		if (hooked_key->vkCode == VK_LCONTROL && 0x51) { 
+			exit(0); 
+		}
 		if (wparam != "2")
 		{
 			std::string message = "0 " + wparam + ' ' + lparam + ' ' + kcode + '\0';
