@@ -65,7 +65,10 @@ LRESULT CALLBACK MouseEventProcServer(int nCode, WPARAM wParam, LPARAM lParam)
 				}
 				else if (action == MOUSEEVENTF_WHEEL)
 				{
-					delta = std::to_string(GET_WHEEL_DELTA_WPARAM(wParam)) + ' ';
+					MSLLHOOKSTRUCT *pMhs = (MSLLHOOKSTRUCT *)lParam;
+					short zDelta = HIWORD(pMhs->mouseData);
+					zDelta /= 120;
+					delta = std::to_string(zDelta) + ' ';
 					message = "2 " + std::to_string(action) + ' ' + lparam + ' ' + delta + '\0';
 				}
 				if (InputHandler::Instance().hasConnection && action != -1)
