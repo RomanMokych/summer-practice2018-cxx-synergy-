@@ -19,11 +19,24 @@ void BClient::Connect(boost::asio::ip::tcp::endpoint& endpoint)
 
 void BClient::PostReceive()
 {
-
-	m_Socket.async_read_some(boost::asio::buffer(buff),
-		boost::bind(&BClient::handle_receive, this,
-			boost::asio::placeholders::error,
-			boost::asio::placeholders::bytes_transferred));
+	if (!InputHandler::Instance().sentMessage.empty())
+	{
+		try {
+			std::cout << InputHandler::Instance().sentMessage.front() << std::endl;
+			boost::asio::write(m_Socket, boost::asio::buffer(InputHandler::Instance().sentMessage.front()));
+			InputHandler::Instance().sentMessage.pop();
+		}
+		catch (std::exception&) {
+			return;
+		}
+	}
+	else
+	{
+		m_Socket.async_read_some(boost::asio::buffer(buff),
+			boost::bind(&BClient::handle_receive, this,
+				boost::asio::placeholders::error,
+				boost::asio::placeholders::bytes_transferred));
+	}
 }
 
 
@@ -31,6 +44,8 @@ void BClient::handle_connect(const boost::system::error_code& error)
 {
 	if (error)
 	{
+		InputHandler::Instance().hasConnection = false;
+		InputHandler::Instance().isCurrentComputerDisabled = false;
 		std::cout << "handle_connect connect failed error No: " << error.value() << " error Message: " << error.message() << std::endl;
 	}
 	else

@@ -82,6 +82,7 @@ LRESULT CALLBACK MouseEventProcServer(int nCode, WPARAM wParam, LPARAM lParam)
 				GetCursorPos(&InputHandler::Instance().mousePosition);
 			}
 		}
+
 		return (InputHandler::Instance().isCurrentComputerDisabled ? 1 : CallNextHookEx(InputHandler::Instance().hKeyboardHook, nCode, wParam, lParam));
 	}
 }
