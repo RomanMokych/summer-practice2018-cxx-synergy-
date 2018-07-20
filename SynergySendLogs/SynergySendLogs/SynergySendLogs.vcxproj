@@ -21,8 +21,9 @@
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
     <ProjectGuid>{4D785D2F-B66C-40F1-A64F-6FE6AB34E5B2}</ProjectGuid>
-    <RootNamespace>SynergySendLogs</RootNamespace>
+    <RootNamespace>Synergy</RootNamespace>
     <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
+    <ProjectName>Synergy</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -130,12 +131,14 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="BoostServer.cpp" />
+    <ClCompile Include="Emulator.cpp" />
     <ClCompile Include="InputHandler.cpp" />
     <ClCompile Include="Source.cpp" />
     <ClCompile Include="TCP_connection.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BoostServer.h" />
+    <ClInclude Include="Emulator.h" />
     <ClInclude Include="InputHandler.h" />
     <ClInclude Include="TCP_connection.h" />
   </ItemGroup>

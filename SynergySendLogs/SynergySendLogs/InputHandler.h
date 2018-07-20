@@ -10,23 +10,37 @@
 #include <iostream>
 #include <cstdlib>
 #include <queue>
+#include <atomic>
 
 using boost::asio::ip::tcp;
 
 class InputHandler
 {
 public:
-	bool hasConnection;
-	bool isCurrentComputerDisabled;
+	std::atomic_bool hasConnection;
+	std::atomic_bool isCurrentComputerDisabled;
 	HHOOK hKeyboardHook;
 	HHOOK hMouseHook;
 	POINT mousePosition;
 	static InputHandler& Instance();
-	void MyMouseLogger();
-	void MyKeyboardLogger();
+	void ServerMouseLogger();
+	void ServerKeyboardLogger();
+	void ClientKeyboardLogger();
+	void ClientMouseLogger();
 	void MessageLoop();
-	void Run();
+	int GetMouseAction(WPARAM wParam);
+	int GetKeyBoardAction(WPARAM wParam);
+	bool MouseEventProcOutOfBorder(int nCode, WPARAM wParam, LPARAM lParam);
 	std::queue<std::string> sentMessage;
+	char recievedMessage[1024];
+private:
+	InputHandler()
+	{
+		GetCursorPos(&mousePosition);
+	}
+	~InputHandler(){}
+	InputHandler(InputHandler const&) = delete;
+	InputHandler(InputHandler const&&) = delete;
+	InputHandler operator=(InputHandler const&) = delete;
+	InputHandler operator=(InputHandler const&&) = delete;
 };
-LRESULT CALLBACK KeyboardEventProc(int nCode, WPARAM wParam, LPARAM lParam);
-LRESULT CALLBACK MouseEventProc(int nCode, WPARAM wParam, LPARAM lParam);

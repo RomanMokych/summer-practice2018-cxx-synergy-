@@ -1,14 +1,14 @@
 #include "InputHandler.h"
 #include "BoostServer.h"
 
-int main()
+void Server()
 {
 	try
 	{
-		InputHandler::Instance().hasConnection = InputHandler::Instance().isCurrentComputerDisabled = false;
-		GetCursorPos(&InputHandler::Instance().mousePosition);
-		std::thread mouseThread(&InputHandler::MyMouseLogger, InputHandler::Instance());
-		std::thread keyboardThread(&InputHandler::MyKeyboardLogger, InputHandler::Instance());
+		InputHandler::Instance().hasConnection.store(false);
+		InputHandler::Instance().isCurrentComputerDisabled.store(false);
+		std::thread mouseThread(&InputHandler::ServerMouseLogger, std::ref(InputHandler::Instance()));
+		std::thread keyboardThread(&InputHandler::ServerKeyboardLogger, std::ref(InputHandler::Instance()));
 		boost::asio::io_service io_service;
 		BoostServer server(io_service);
 		io_service.run();
@@ -20,5 +20,9 @@ int main()
 	{
 		std::cout << ex.what() << std::endl;
 	}
+}
+int main()
+{
+	Server();
 	return 0;
 }
