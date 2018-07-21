@@ -5,8 +5,8 @@ void Server()
 {
 	try
 	{
-		InputHandler::Instance().hasConnection.store(false);
-		InputHandler::Instance().isCurrentComputerDisabled.store(false);
+		InputHandler::Instance().hasConnection = false;
+		InputHandler::Instance().isCurrentComputerDisabled = false;
 		std::thread mouseThread(&InputHandler::ServerMouseLogger, std::ref(InputHandler::Instance()));
 		std::thread keyboardThread(&InputHandler::ServerKeyboardLogger, std::ref(InputHandler::Instance()));
 		boost::asio::io_service io_service;

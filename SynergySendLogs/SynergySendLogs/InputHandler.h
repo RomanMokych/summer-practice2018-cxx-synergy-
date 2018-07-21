@@ -17,8 +17,8 @@ using boost::asio::ip::tcp;
 class InputHandler
 {
 public:
-	std::atomic_bool hasConnection;
-	std::atomic_bool isCurrentComputerDisabled;
+	bool isCurrentComputerDisabled;
+	bool hasConnection;
 	HHOOK hKeyboardHook;
 	HHOOK hMouseHook;
 	POINT mousePosition;
@@ -30,10 +30,11 @@ public:
 	void MessageLoop();
 	int GetMouseAction(WPARAM wParam);
 	int GetKeyBoardAction(WPARAM wParam);
-	bool MouseEventProcOutOfBorder(int nCode, WPARAM wParam, LPARAM lParam);
+	bool MouseEventProcOutOfBorder(LPARAM lParam);
 	std::queue<std::string> sentMessage;
 	char recievedMessage[1024];
 private:
+	static std::mutex mutex_;
 	InputHandler()
 	{
 		GetCursorPos(&mousePosition);

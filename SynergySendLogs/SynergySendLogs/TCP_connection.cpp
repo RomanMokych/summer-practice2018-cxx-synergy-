@@ -38,7 +38,6 @@ void TCP_connection::start()
 		{
 			try
 			{
-				std::cout << InputHandler::Instance().sentMessage.front() << std::endl;
 				boost::asio::write(socket(),
 					boost::asio::buffer(InputHandler::Instance().sentMessage.front()));
 				InputHandler::Instance().sentMessage.pop();

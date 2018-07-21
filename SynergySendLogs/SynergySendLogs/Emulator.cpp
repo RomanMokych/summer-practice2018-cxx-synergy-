@@ -111,8 +111,7 @@ void Emulator::ParseMSG(std::string strRecvMessage)
 		std::cout << "HUY :" << wval << std::endl;
 		int yval = wval * GetSystemMetrics(SM_CYSCREEN);
 		std::cout << "PIZDA :" << yval << std::endl;
-		InputHandler::Instance().isCurrentComputerDisabled.store(false, std::memory_order_release);
-		std::cout << InputHandler::Instance().isCurrentComputerDisabled << std::endl;
+		InputHandler::Instance().isCurrentComputerDisabled = false;
 		INPUT input;
 		input.type = INPUT_MOUSE;
 		input.mi.mouseData = 0;
@@ -132,8 +131,7 @@ void Emulator::ParseMSG(std::string strRecvMessage)
 		std::cout << "HUY :" << wval << std::endl;
 		int yval = wval * GetSystemMetrics(SM_CYSCREEN);
 		std::cout << "PIZDA :" << yval << std::endl;
-		InputHandler::Instance().isCurrentComputerDisabled.store(false, std::memory_order_release);
-		std::cout << InputHandler::Instance().isCurrentComputerDisabled << std::endl;
+		InputHandler::Instance().isCurrentComputerDisabled = false;
 		INPUT input;
 		input.type = INPUT_MOUSE;
 		input.mi.mouseData = 0;
@@ -153,8 +151,7 @@ void Emulator::ParseMSG(std::string strRecvMessage)
 		std::cout << "HUY :" << wval << std::endl;
 		int yval = wval * GetSystemMetrics(SM_CXSCREEN);
 		std::cout << "PIZDA :" << yval << std::endl;
-		InputHandler::Instance().isCurrentComputerDisabled.store(false, std::memory_order_release);
-		std::cout << InputHandler::Instance().isCurrentComputerDisabled << std::endl;
+		InputHandler::Instance().isCurrentComputerDisabled = false;
 		INPUT input;
 		input.type = INPUT_MOUSE;
 		input.mi.mouseData = 0;
@@ -174,8 +171,7 @@ void Emulator::ParseMSG(std::string strRecvMessage)
 		std::cout << "HUY :" << wval << std::endl;
 		int yval = wval * GetSystemMetrics(SM_CXSCREEN);
 		std::cout << "PIZDA :" << yval << std::endl;
-		InputHandler::Instance().isCurrentComputerDisabled.store(false, std::memory_order_release);
-		std::cout << InputHandler::Instance().isCurrentComputerDisabled << std::endl;
+		InputHandler::Instance().isCurrentComputerDisabled = false;
 		INPUT input;
 		input.type = INPUT_MOUSE;
 		input.mi.mouseData = 0;
