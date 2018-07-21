@@ -188,7 +188,7 @@ bool InputHandler::MouseEventProcOutOfBorder(LPARAM lParam)
 		float yCoord, xCoord;
 		if (pMouseStruct->pt.x - mousePosition.x < 0 && 
 			mousePosition.x == 0 &&
-			isCurrentComputerDisabled &&
+			!isCurrentComputerDisabled &&
 			neighbours[0] != "0")
 		{
 			isCurrentComputerDisabled = true;
