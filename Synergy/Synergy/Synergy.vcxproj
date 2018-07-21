@@ -130,6 +130,7 @@
     <ClCompile Include="BoostServer.cpp" />
     <ClCompile Include="Emulator.cpp" />
     <ClCompile Include="InputHandler.cpp" />
+    <ClCompile Include="ISynegy.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="TCP_connection.cpp" />
   </ItemGroup>
@@ -138,6 +139,7 @@
     <ClInclude Include="BoostServer.h" />
     <ClInclude Include="Emulator.h" />
     <ClInclude Include="InputHandler.h" />
+    <ClInclude Include="ISynegy.h" />
     <ClInclude Include="TCP_connection.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
