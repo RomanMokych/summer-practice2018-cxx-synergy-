@@ -1,6 +1,5 @@
 #pragma once
 #pragma comment( lib, "user32.lib" )
-
 #include <boost/bind.hpp>
 #include <boost/smart_ptr.hpp>
 #include <boost/asio.hpp>
@@ -33,7 +32,11 @@ public:
 	bool MouseEventProcOutOfBorder(LPARAM lParam);
 	std::queue<std::string> sentMessage;
 	char recievedMessage[1024];
+
 private:
+
+	std::string neighbours[4] = { " " };
+
 	static std::mutex mutex_;
 	InputHandler()
 	{

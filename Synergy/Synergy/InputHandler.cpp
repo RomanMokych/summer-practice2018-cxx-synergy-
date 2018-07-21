@@ -15,7 +15,7 @@ LRESULT CALLBACK KeyboardEventProcServer(int nCode, WPARAM wParam, LPARAM lParam
 		std::string lparam = std::to_string(lParam);
 		std::string kcode = std::to_string(hooked_key->vkCode);
 		std::string message = "0 " + action + ' ' + lparam + ' ' + kcode + '\0';
-		if (InputHandler::Instance().hasConnection)
+		if (InputHandler::Instance().hasConnection && action != "2")
 		{
 			InputHandler::Instance().sentMessage.push(message);
 		}

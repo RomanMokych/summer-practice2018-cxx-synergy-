@@ -20,7 +20,7 @@ private:
 	void handle_receive(const boost::system::error_code& error, size_t bytes_transferred);
 	void handle_write();
 	RECT getSysMonitor();
-	std::string data_compression();
+	std::string data_compression(int length);
 
 
 	//Connection

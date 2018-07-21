@@ -75,9 +75,10 @@ RECT BClient::getSysMonitor() {
 	return DesktopRect;
 }
 
-std::string BClient::data_compression() 
+std::string BClient::data_compression(int length) 
 {
-		return 
+		if()
+	return "hi";
 }
 
 

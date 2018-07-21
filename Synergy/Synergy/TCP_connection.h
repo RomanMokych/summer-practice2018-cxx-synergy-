@@ -14,8 +14,6 @@ private:
 	tcp::socket socket_;
 
 public:
-	
-
 	typedef boost::shared_ptr<TCP_connection> pointer;
 	static pointer create(boost::asio::io_service& io_service);
 	tcp::socket& socket();
