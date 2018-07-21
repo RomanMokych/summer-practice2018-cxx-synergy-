@@ -85,7 +85,7 @@ void Emulator::ParseMSG(std::string strRecvMessage)
 		int lval = atoi(code[2].c_str());
 
 		unsigned short val = (unsigned short)atoi(code[3].c_str());
-		Emulator::KeyAction(val, (WPARAM)(DWORD)lval);
+		Emulator::KeyAction(val, lval);
 	}
 	else if (strRecvMessage[0] == '2')
 	{
@@ -108,9 +108,7 @@ void Emulator::ParseMSG(std::string strRecvMessage)
 			iss >> mouse[i];
 		}
 		float wval = atof(mouse[1].c_str());
-		std::cout << "HUY :" << wval << std::endl;
 		int yval = wval * GetSystemMetrics(SM_CYSCREEN);
-		std::cout << "PIZDA :" << yval << std::endl;
 		InputHandler::Instance().isCurrentComputerDisabled = false;
 		INPUT input;
 		input.type = INPUT_MOUSE;
@@ -129,9 +127,7 @@ void Emulator::ParseMSG(std::string strRecvMessage)
 			iss >> mouse[i];
 		}
 		float wval = atof(mouse[1].c_str());
-		std::cout << "HUY :" << wval << std::endl;
 		int yval = wval * GetSystemMetrics(SM_CYSCREEN);
-		std::cout << "PIZDA :" << yval << std::endl;
 		InputHandler::Instance().isCurrentComputerDisabled = false;
 		INPUT input;
 		input.type = INPUT_MOUSE;
@@ -150,9 +146,7 @@ void Emulator::ParseMSG(std::string strRecvMessage)
 			iss >> mouse[i];
 		}
 		float wval = atof(mouse[1].c_str());
-		std::cout << "HUY :" << wval << std::endl;
 		int yval = wval * GetSystemMetrics(SM_CXSCREEN);
-		std::cout << "PIZDA :" << yval << std::endl;
 		InputHandler::Instance().isCurrentComputerDisabled = false;
 		INPUT input;
 		input.type = INPUT_MOUSE;
@@ -171,9 +165,7 @@ void Emulator::ParseMSG(std::string strRecvMessage)
 			iss >> mouse[i];
 		}
 		float wval = atof(mouse[1].c_str());
-		std::cout << "HUY :" << wval << std::endl;
 		int yval = wval * GetSystemMetrics(SM_CXSCREEN);
-		std::cout << "PIZDA :" << yval << std::endl;
 		InputHandler::Instance().isCurrentComputerDisabled = false;
 		INPUT input;
 		input.type = INPUT_MOUSE;
@@ -184,5 +176,11 @@ void Emulator::ParseMSG(std::string strRecvMessage)
 		SendInput(1, &input, sizeof(input));
 		GetCursorPos(&InputHandler::Instance().mousePosition);
 	}
-	
+	else if (strRecvMessage[0] == '7')
+	{
+		for (size_t i = 0; i < 4; i++)
+		{
+			iss >> InputHandler::Instance().neighbours[i];
+		}
+	}
 }

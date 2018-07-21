@@ -9,7 +9,6 @@
 #include <iostream>
 #include <cstdlib>
 #include <queue>
-#include <atomic>
 
 using boost::asio::ip::tcp;
 
@@ -32,11 +31,8 @@ public:
 	bool MouseEventProcOutOfBorder(LPARAM lParam);
 	std::queue<std::string> sentMessage;
 	char recievedMessage[1024];
-
-private:
-
 	std::string neighbours[4] = { " " };
-
+private:
 	static std::mutex mutex_;
 	InputHandler()
 	{

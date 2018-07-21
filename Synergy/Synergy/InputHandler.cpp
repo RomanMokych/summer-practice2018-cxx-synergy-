@@ -164,8 +164,11 @@ int InputHandler::GetKeyBoardAction(WPARAM wParam)
 {
 	switch (wParam)
 	{
+	case WM_HOTKEY:
 	case WM_KEYDOWN:
+	case WM_SYSKEYDOWN:
 		return 0;
+	case WM_SYSKEYUP:
 	case WM_KEYUP:
 		return KEYEVENTF_KEYUP;
 	default:
@@ -182,49 +185,52 @@ bool InputHandler::MouseEventProcOutOfBorder(LPARAM lParam)
 		POINT P;
 		GetCursorPos(&P);
 		float yCoord, xCoord;
-		if (pMouseStruct->pt.x - InputHandler::Instance().mousePosition.x < 0 && 
-			InputHandler::Instance().mousePosition.x == 0 &&
-			!InputHandler::Instance().isCurrentComputerDisabled)
+		if (pMouseStruct->pt.x - mousePosition.x < 0 && 
+			mousePosition.x == 0 &&
+			isCurrentComputerDisabled &&
+			neighbours[0] != "0")
 		{
-			InputHandler::Instance().isCurrentComputerDisabled = true;
+			isCurrentComputerDisabled = true;
 			yCoord = (float)P.y / GetSystemMetrics(SM_CYSCREEN);
-			InputHandler::Instance().sentMessage.push("3 " + std::to_string(yCoord));
+			sentMessage.push("3 " + std::to_string(yCoord) + '\0');
 			SetCursorPos(GetSystemMetrics(SM_CXSCREEN), GetSystemMetrics(SM_CYSCREEN));
-			GetCursorPos(&InputHandler::Instance().mousePosition);
+			GetCursorPos(&mousePosition);
 			return true;
 		}
-		if (pMouseStruct->pt.x - InputHandler::Instance().mousePosition.x > 0 &&
-			InputHandler::Instance().mousePosition.x == GetSystemMetrics(SM_CXSCREEN) - 1 &&
-			!InputHandler::Instance().isCurrentComputerDisabled)
+		if (pMouseStruct->pt.x - mousePosition.x > 0 &&
+			mousePosition.x == GetSystemMetrics(SM_CXSCREEN) - 1 &&
+			!isCurrentComputerDisabled &&
+			neighbours[1] != "0")
 		{
-			std::cout << pMouseStruct->pt.x - InputHandler::Instance().mousePosition.x << std::endl;
-			InputHandler::Instance().isCurrentComputerDisabled = true;
+			isCurrentComputerDisabled = true;
 			yCoord = (float)P.y / GetSystemMetrics(SM_CYSCREEN);
-			InputHandler::Instance().sentMessage.push("4 " + std::to_string(yCoord));
+			sentMessage.push("4 " + std::to_string(yCoord) + '\0');
 			SetCursorPos(GetSystemMetrics(SM_CXSCREEN), GetSystemMetrics(SM_CYSCREEN));
-			GetCursorPos(&InputHandler::Instance().mousePosition);
+			GetCursorPos(&mousePosition);
 			return true;
 		}
-		if (pMouseStruct->pt.y - InputHandler::Instance().mousePosition.y < 0 && 
-			InputHandler::Instance().mousePosition.y == 0 &&
-			!InputHandler::Instance().isCurrentComputerDisabled)
+		if (pMouseStruct->pt.y - mousePosition.y < 0 && 
+			mousePosition.y == 0 &&
+			!isCurrentComputerDisabled &&
+			neighbours[2] != "0")
 		{
-			InputHandler::Instance().isCurrentComputerDisabled = true;
+			isCurrentComputerDisabled = true;
 			yCoord = (float)P.x / GetSystemMetrics(SM_CXSCREEN);
-			InputHandler::Instance().sentMessage.push("5 " + std::to_string(yCoord));
+			sentMessage.push("5 " + std::to_string(yCoord) + '\0');
 			SetCursorPos(GetSystemMetrics(SM_CXSCREEN), GetSystemMetrics(SM_CYSCREEN));
-			GetCursorPos(&InputHandler::Instance().mousePosition);
+			GetCursorPos(&mousePosition);
 			return true;
 		}
-		if (pMouseStruct->pt.y - InputHandler::Instance().mousePosition.y > 0 &&
-			InputHandler::Instance().mousePosition.y == GetSystemMetrics(SM_CYSCREEN) - 1 &&
-			!InputHandler::Instance().isCurrentComputerDisabled)
+		if (pMouseStruct->pt.y - mousePosition.y > 0 &&
+			mousePosition.y == GetSystemMetrics(SM_CYSCREEN) - 1 &&
+			!isCurrentComputerDisabled &&
+			neighbours[3] != "0")
 		{
-			InputHandler::Instance().isCurrentComputerDisabled = true;
+			isCurrentComputerDisabled = true;
 			yCoord = (float)P.x / GetSystemMetrics(SM_CXSCREEN);
-			InputHandler::Instance().sentMessage.push("6 " + std::to_string(yCoord));
+			sentMessage.push("6 " + std::to_string(yCoord) + '\0');
 			SetCursorPos(GetSystemMetrics(SM_CXSCREEN), GetSystemMetrics(SM_CYSCREEN));
-			GetCursorPos(&InputHandler::Instance().mousePosition);
+			GetCursorPos(&mousePosition);
 			return true;
 		}
 

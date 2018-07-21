@@ -6,7 +6,6 @@ TCP_connection::TCP_connection(boost::asio::io_service& io_service) : socket_(io
 
 void TCP_connection::handle_read(const boost::system::error_code &, size_t)
 {
-	std::cout << InputHandler::Instance().recievedMessage << std::endl;
 	Emulator::ParseMSG(InputHandler::Instance().recievedMessage);
 }
 
