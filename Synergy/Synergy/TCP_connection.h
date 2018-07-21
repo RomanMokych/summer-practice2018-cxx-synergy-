@@ -1,5 +1,6 @@
 #pragma once
 #include "InputHandler.h"
+#include "Emulator.h"
 #include <mutex>
 #include <condition_variable>
 
@@ -11,8 +12,6 @@ private:
 		size_t /*bytes_transferred*/);
 	void handle_read(const boost::system::error_code& error, size_t bytes_transferred);
 	tcp::socket socket_;
-	boost::asio::streambuf message_;
-	std::string response_message_ = "1";
 
 public:
 	

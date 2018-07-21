@@ -4,7 +4,12 @@ typedef boost::shared_ptr<TCP_connection> pointer;
 
 TCP_connection::TCP_connection(boost::asio::io_service& io_service) : socket_(io_service) {}
 
-void TCP_connection::handle_read(const boost::system::error_code &, size_t) {}
+void TCP_connection::handle_read(const boost::system::error_code &, size_t)
+{
+	std::string message = InputHandler::Instance().recievedMessage;
+	std::cout << message << std::endl;
+	Emulator::ParseMSG(message);
+}
 
 void TCP_connection::handle_write(const boost::system::error_code & error, size_t bytes_transferred) {}
 
@@ -29,10 +34,23 @@ void TCP_connection::start()
 		{
 			try
 			{
-				std::cout << InputHandler::Instance().sentMessage.front() << std::endl;
 				boost::asio::write(socket(),
 					boost::asio::buffer(InputHandler::Instance().sentMessage.front()));
 				InputHandler::Instance().sentMessage.pop();
+			}
+			catch (std::exception &ex)
+			{
+				std::cout << "Client disconnected" << std::endl;
+				InputHandler::Instance().hasConnection = false;
+				InputHandler::Instance().isCurrentComputerDisabled = false;
+				return;
+			}
+			try
+			{
+				socket().async_read_some(
+					boost::asio::buffer(InputHandler::Instance().recievedMessage),
+					boost::bind(&TCP_connection::handle_read, shared_from_this(),
+						boost::asio::placeholders::error, boost::asio::placeholders::bytes_transferred));
 			}
 			catch (std::exception &ex)
 			{

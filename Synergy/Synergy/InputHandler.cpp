@@ -2,50 +2,27 @@
 
 InputHandler & InputHandler::Instance()
 {
+	std::unique_lock <std::mutex> un(mutex_);
 	static InputHandler handler;
 	return handler;
 }
-
-LRESULT CALLBACK KeyboardEventProcClient(int nCode, WPARAM wParam, LPARAM lParam)
-{
-	return (InputHandler::Instance().isCurrentComputerDisabled ? 1 : CallNextHookEx(InputHandler::Instance().hKeyboardHook, nCode, wParam, lParam));
-}
-
 LRESULT CALLBACK KeyboardEventProcServer(int nCode, WPARAM wParam, LPARAM lParam)
 {
 	KBDLLHOOKSTRUCT *hooked_key = (KBDLLHOOKSTRUCT*)lParam;
 	if (hooked_key != NULL)
 	{
-		std::string wparam = std::to_string(InputHandler::Instance().GetKeyBoardAction(wParam));
+		std::string action = std::to_string(InputHandler::Instance().GetKeyBoardAction(wParam));
 		std::string lparam = std::to_string(lParam);
 		std::string kcode = std::to_string(hooked_key->vkCode);
-
-		if (hooked_key->vkCode == VK_LCONTROL && 0x51) { 
-			exit(0); 
-		}
-		if (wparam != "2")
+		std::string message = "0 " + action + ' ' + lparam + ' ' + kcode + '\0';
+		if (InputHandler::Instance().hasConnection)
 		{
-			std::string message = "0 " + wparam + ' ' + lparam + ' ' + kcode + '\0';
-			if (InputHandler::Instance().hasConnection)
-			{
-				InputHandler::Instance().sentMessage.push(message);
-			}
+			InputHandler::Instance().sentMessage.push(message);
 		}
 		return (InputHandler::Instance().isCurrentComputerDisabled ? 1 : CallNextHookEx(InputHandler::Instance().hKeyboardHook, nCode, wParam, lParam));
 	}
 }
-LRESULT CALLBACK MouseEventProcClient(int nCode, WPARAM wParam, LPARAM lParam)
-{
-	MOUSEHOOKSTRUCT * pMouseStruct = (MOUSEHOOKSTRUCT *)lParam;
-	if (pMouseStruct != NULL)
-	{
-		if (InputHandler::Instance().MouseEventProcOutOfBorder(nCode, wParam, lParam))
-		{
-			InputHandler::Instance().isCurrentComputerDisabled = true;
-		}
-	}
-	return (InputHandler::Instance().isCurrentComputerDisabled ? 1 : CallNextHookEx(InputHandler::Instance().hKeyboardHook, nCode, wParam, lParam));
-}
+
 LRESULT CALLBACK MouseEventProcServer(int nCode, WPARAM wParam, LPARAM lParam)
 {
 	MOUSEHOOKSTRUCT * pMouseStruct = (MOUSEHOOKSTRUCT *)lParam;
@@ -53,38 +30,45 @@ LRESULT CALLBACK MouseEventProcServer(int nCode, WPARAM wParam, LPARAM lParam)
 	{
 		if (InputHandler::Instance().hasConnection)
 		{
-			if (!InputHandler::Instance().MouseEventProcOutOfBorder(nCode, wParam, lParam))
+			if (!InputHandler::Instance().MouseEventProcOutOfBorder(lParam))
 			{
-				std::string wparam = std::to_string(wParam);
+				std::string action = std::to_string(InputHandler::Instance().GetMouseAction(wParam));
 				std::string lparam = std::to_string(lParam);
 				short dx = pMouseStruct->pt.x - InputHandler::Instance().mousePosition.x;
 				short dy = pMouseStruct->pt.y - InputHandler::Instance().mousePosition.y;
-				int action = InputHandler::Instance().GetMouseAction(wParam);
-				std::string delta;
-				std::string message;
-				if (action != -1 && action != MOUSEEVENTF_WHEEL)
-				{
-					delta = std::to_string(dx) + ' ' + std::to_string(dy);
-					message = "1 " + std::to_string(action) + ' ' + lparam + ' ' + delta + '\0';
-				}
-				else if (action == MOUSEEVENTF_WHEEL)
-				{
-					MSLLHOOKSTRUCT *pMhs = (MSLLHOOKSTRUCT *)lParam;
-					short zDelta = HIWORD(pMhs->mouseData);
-					zDelta /= 120;
-					delta = std::to_string(zDelta) + ' ';
-					message = "2 " + std::to_string(action) + ' ' + lparam + ' ' + delta + '\0';
-				}
-				if (InputHandler::Instance().hasConnection && action != -1)
+				std::string delta = std::to_string(dx) + ' ' + std::to_string(dy);
+				std::string message = "1 " + action + ' ' + lparam + ' ' + delta + '\0';
+				if (InputHandler::Instance().hasConnection)
 				{
 					InputHandler::Instance().sentMessage.push(message);
 				}
 				GetCursorPos(&InputHandler::Instance().mousePosition);
 			}
 		}
-
 		return (InputHandler::Instance().isCurrentComputerDisabled ? 1 : CallNextHookEx(InputHandler::Instance().hKeyboardHook, nCode, wParam, lParam));
 	}
+}
+
+LRESULT CALLBACK KeyboardEventProcClient(int nCode, WPARAM wParam, LPARAM lParam)
+{
+	return (InputHandler::Instance().isCurrentComputerDisabled ? 1 : CallNextHookEx(InputHandler::Instance().hKeyboardHook, nCode, wParam, lParam));
+}
+
+LRESULT CALLBACK MouseEventProcClient(int nCode, WPARAM wParam, LPARAM lParam)
+{
+	MOUSEHOOKSTRUCT * pMouseStruct = (MOUSEHOOKSTRUCT *)lParam;
+	if (pMouseStruct != NULL)
+	{
+		if (InputHandler::Instance().hasConnection)
+		{
+			if (InputHandler::Instance().MouseEventProcOutOfBorder(lParam));
+			else
+			{
+				GetCursorPos(&InputHandler::Instance().mousePosition);
+			}
+		}
+	}
+	return (InputHandler::Instance().isCurrentComputerDisabled ? 1 : CallNextHookEx(InputHandler::Instance().hKeyboardHook, nCode, wParam, lParam));
 }
 
 void InputHandler::ServerMouseLogger()
@@ -190,7 +174,7 @@ int InputHandler::GetKeyBoardAction(WPARAM wParam)
 	}
 }
 
-bool InputHandler::MouseEventProcOutOfBorder(int nCode, WPARAM wParam, LPARAM lParam)
+bool InputHandler::MouseEventProcOutOfBorder(LPARAM lParam)
 {
 	MOUSEHOOKSTRUCT * pMouseStruct = (MOUSEHOOKSTRUCT *)lParam;
 	if (pMouseStruct != NULL)
@@ -198,7 +182,9 @@ bool InputHandler::MouseEventProcOutOfBorder(int nCode, WPARAM wParam, LPARAM lP
 		POINT P;
 		GetCursorPos(&P);
 		float yCoord, xCoord;
-		if (pMouseStruct->pt.x < 0 && P.x == 0 && !InputHandler::Instance().isCurrentComputerDisabled)
+		if (pMouseStruct->pt.x - InputHandler::Instance().mousePosition.x < 0 && 
+			InputHandler::Instance().mousePosition.x == 0 &&
+			!InputHandler::Instance().isCurrentComputerDisabled)
 		{
 			InputHandler::Instance().isCurrentComputerDisabled = true;
 			yCoord = (float)P.y / GetSystemMetrics(SM_CYSCREEN);
@@ -207,8 +193,11 @@ bool InputHandler::MouseEventProcOutOfBorder(int nCode, WPARAM wParam, LPARAM lP
 			GetCursorPos(&InputHandler::Instance().mousePosition);
 			return true;
 		}
-		if (pMouseStruct->pt.x > 0 && P.x == GetSystemMetrics(SM_CXSCREEN) - 1 && !InputHandler::Instance().isCurrentComputerDisabled)
+		if (pMouseStruct->pt.x - InputHandler::Instance().mousePosition.x > 0 &&
+			InputHandler::Instance().mousePosition.x == GetSystemMetrics(SM_CXSCREEN) - 1 &&
+			!InputHandler::Instance().isCurrentComputerDisabled)
 		{
+			std::cout << pMouseStruct->pt.x - InputHandler::Instance().mousePosition.x << std::endl;
 			InputHandler::Instance().isCurrentComputerDisabled = true;
 			yCoord = (float)P.y / GetSystemMetrics(SM_CYSCREEN);
 			InputHandler::Instance().sentMessage.push("4 " + std::to_string(yCoord));
@@ -216,7 +205,9 @@ bool InputHandler::MouseEventProcOutOfBorder(int nCode, WPARAM wParam, LPARAM lP
 			GetCursorPos(&InputHandler::Instance().mousePosition);
 			return true;
 		}
-		if (pMouseStruct->pt.y < 0 && P.y == 0 && !InputHandler::Instance().isCurrentComputerDisabled)
+		if (pMouseStruct->pt.y - InputHandler::Instance().mousePosition.y < 0 && 
+			InputHandler::Instance().mousePosition.y == 0 &&
+			!InputHandler::Instance().isCurrentComputerDisabled)
 		{
 			InputHandler::Instance().isCurrentComputerDisabled = true;
 			yCoord = (float)P.x / GetSystemMetrics(SM_CXSCREEN);
@@ -225,7 +216,9 @@ bool InputHandler::MouseEventProcOutOfBorder(int nCode, WPARAM wParam, LPARAM lP
 			GetCursorPos(&InputHandler::Instance().mousePosition);
 			return true;
 		}
-		if (pMouseStruct->pt.y > 0 && P.y == GetSystemMetrics(SM_CYSCREEN) - 1 && !InputHandler::Instance().isCurrentComputerDisabled)
+		if (pMouseStruct->pt.y - InputHandler::Instance().mousePosition.y > 0 &&
+			InputHandler::Instance().mousePosition.y == GetSystemMetrics(SM_CYSCREEN) - 1 &&
+			!InputHandler::Instance().isCurrentComputerDisabled)
 		{
 			InputHandler::Instance().isCurrentComputerDisabled = true;
 			yCoord = (float)P.x / GetSystemMetrics(SM_CXSCREEN);
@@ -234,7 +227,9 @@ bool InputHandler::MouseEventProcOutOfBorder(int nCode, WPARAM wParam, LPARAM lP
 			GetCursorPos(&InputHandler::Instance().mousePosition);
 			return true;
 		}
-		
+
 	}
 	return false;
 }
+
+std::mutex InputHandler::mutex_;

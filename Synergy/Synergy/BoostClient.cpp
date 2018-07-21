@@ -30,13 +30,10 @@ void BClient::PostReceive()
 			return;
 		}
 	}
-	else
-	{
-		m_Socket.async_read_some(boost::asio::buffer(buff),
-			boost::bind(&BClient::handle_receive, this,
-				boost::asio::placeholders::error,
-				boost::asio::placeholders::bytes_transferred));
-	}
+	m_Socket.async_read_some(boost::asio::buffer(buff),
+		boost::bind(&BClient::handle_receive, this,
+			boost::asio::placeholders::error,
+			boost::asio::placeholders::bytes_transferred));
 }
 
 
@@ -62,16 +59,14 @@ void BClient::handle_receive(const boost::system::error_code& error, size_t byte
 {
 	if (error)
 	{
+		InputHandler::Instance().hasConnection = false;
+		InputHandler::Instance().isCurrentComputerDisabled = false;
 		if (error == boost::asio::error::eof)
 		{
-			InputHandler::Instance().hasConnection = false;
-			InputHandler::Instance().isCurrentComputerDisabled = false;
 			std::cout << "Disconnect" << std::endl;
 		}
 		else
 		{
-			InputHandler::Instance().hasConnection = false;
-			InputHandler::Instance().isCurrentComputerDisabled = false;
 			std::cout << "handle_receive error No: " << error.value() << " error Message: " << error.message() << std::endl;
 		}
 	}

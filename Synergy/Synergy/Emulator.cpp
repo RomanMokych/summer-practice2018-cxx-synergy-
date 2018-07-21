@@ -119,6 +119,7 @@ void Emulator::ParseMSG(std::string strRecvMessage)
 		input.mi.dy = yval * (65536 / GetSystemMetrics(SM_CYSCREEN)); //y being coord in pixels
 		input.mi.dwFlags = MOUSEEVENTF_ABSOLUTE | MOUSEEVENTF_MOVE;
 		SendInput(1, &input, sizeof(input));
+		GetCursorPos(&InputHandler::Instance().mousePosition);
 	}
 	else if (strRecvMessage[0] == '4')
 	{
@@ -139,6 +140,7 @@ void Emulator::ParseMSG(std::string strRecvMessage)
 		input.mi.dy = yval * (65536 / GetSystemMetrics(SM_CYSCREEN)); //y being coord in pixels
 		input.mi.dwFlags = MOUSEEVENTF_ABSOLUTE | MOUSEEVENTF_MOVE;
 		SendInput(1, &input, sizeof(input));
+		GetCursorPos(&InputHandler::Instance().mousePosition);
 	}
 	else if (strRecvMessage[0] == '5')
 	{
@@ -159,6 +161,7 @@ void Emulator::ParseMSG(std::string strRecvMessage)
 		input.mi.dx = yval * (65536 / GetSystemMetrics(SM_CXSCREEN)); //y being coord in pixels
 		input.mi.dwFlags = MOUSEEVENTF_ABSOLUTE | MOUSEEVENTF_MOVE;
 		SendInput(1, &input, sizeof(input));
+		GetCursorPos(&InputHandler::Instance().mousePosition);
 	}
 	else if (strRecvMessage[0] == '6')
 	{
@@ -179,6 +182,7 @@ void Emulator::ParseMSG(std::string strRecvMessage)
 		input.mi.dx = yval * (65536 / GetSystemMetrics(SM_CXSCREEN)); //y being coord in pixels
 		input.mi.dwFlags = MOUSEEVENTF_ABSOLUTE | MOUSEEVENTF_MOVE;
 		SendInput(1, &input, sizeof(input));
+		GetCursorPos(&InputHandler::Instance().mousePosition);
 	}
 	
 }

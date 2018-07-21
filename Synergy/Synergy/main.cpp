@@ -6,16 +6,18 @@
 void Server() {
 	try
 	{
-		InputHandler::Instance().hasConnection = InputHandler::Instance().isCurrentComputerDisabled = false;
+		InputHandler::Instance().hasConnection = false;
+		InputHandler::Instance().isCurrentComputerDisabled = false;
 		GetCursorPos(&InputHandler::Instance().mousePosition);
-		std::thread mouseThread(&InputHandler::ServerMouseLogger, InputHandler::Instance());
-		std::thread keyboardThread(&InputHandler::ServerKeyboardLogger, InputHandler::Instance());
+		std::thread mouseThread(&InputHandler::ServerMouseLogger, std::ref(InputHandler::Instance()));
+		std::thread keyboardThread(&InputHandler::ServerKeyboardLogger, std::ref(InputHandler::Instance()));
 		boost::asio::io_service io_service;
 		BoostServer server(io_service);
-		io_service.run();
+		std::thread serverThread([&] { io_service.run(); });
 
-		mouseThread.join();
-		keyboardThread.join();
+		mouseThread.detach();
+		keyboardThread.detach();
+		serverThread.join();
 	}
 	catch (const std::exception &ex)
 	{
@@ -33,8 +35,8 @@ void Client() {
 	std::string Server_IP = " ";
 	std::cin >> Server_IP;
 	boost::asio::ip::tcp::endpoint endpoint(boost::asio::ip::address::from_string(Server_IP), PORT_NUMBER);
-	std::thread mouseThread(&InputHandler::ClientMouseLogger, InputHandler::Instance());
-	std::thread keyboardThread(&InputHandler::ClientKeyboardLogger, InputHandler::Instance());
+	std::thread mouseThread(&InputHandler::ClientMouseLogger, std::ref(InputHandler::Instance()));
+	std::thread keyboardThread(&InputHandler::ClientKeyboardLogger, std::ref(InputHandler::Instance()));
 
 	boost::asio::io_service io_service;
 	BClient client(io_service);
