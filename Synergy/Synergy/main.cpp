@@ -1,7 +1,7 @@
 #include "BoostClient.h"
 #include "BoostServer.h"
 #include <conio.h>
-
+#include "ISynegy.h"
 
 void Server() {
 	try
@@ -52,19 +52,8 @@ void Client() {
 
 
 int main() {
-	char choice;
-	std::cout << "1 for server" << std::endl;
-	std::cout << "2 for client" << std::endl;
-	std::cin >> choice;
-	switch (choice)
-	{
-	case '1':
-		Server();
-		break;
-	case '2':
-		Client();
-		break;
-	}
+	ISynergy ui  = ISynergy();
+	ui.MainMenu();
 	system("pause");
 	return 0;	
 }

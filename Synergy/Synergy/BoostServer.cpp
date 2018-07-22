@@ -24,6 +24,10 @@ void BoostServer::handle_accept(TCP_connection::pointer new_connection, const bo
 		try
 		{
 			connections.insert(std::pair<std::string, std::shared_ptr<TCP_connection>>(new_connection->socket().remote_endpoint().address().to_string(), new_connection));
+			for (auto it = BoostServer::connections.cbegin(); it != BoostServer::connections.cend(); ++it)
+			{
+				std::cout << it->first << std::endl;
+			}
 		}
 		catch (std::exception&ex)
 		{

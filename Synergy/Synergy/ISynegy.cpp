@@ -34,15 +34,6 @@ void ISynergy::MainMenu() {
 
 void ISynergy::ServerMode() {
 	cout << "Server mode :" << endl;
-
-	do
-	{
-		cout << "Waiting for connections ..." << endl;
-
-	} while (true);
-
-	ip_adress = BoostServer::connections[].value;
-
 	try
 	{
 		InputHandler::Instance().hasConnection = false;
@@ -52,6 +43,10 @@ void ISynergy::ServerMode() {
 		std::thread keyboardThread(&InputHandler::ServerKeyboardLogger, std::ref(InputHandler::Instance()));
 		boost::asio::io_service io_service;
 		BoostServer server(io_service);
+
+
+
+
 		std::thread serverThread([&] { io_service.run(); });
 
 		mouseThread.detach();
