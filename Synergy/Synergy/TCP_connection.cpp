@@ -1,6 +1,6 @@
 #include "TCP_connection.h"
 
-typedef boost::shared_ptr<TCP_connection> pointer;
+typedef std::shared_ptr<TCP_connection> pointer;
 
 TCP_connection::TCP_connection(boost::asio::io_service& io_service) : socket_(io_service) {}
 

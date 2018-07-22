@@ -4,7 +4,7 @@
 #include <mutex>
 #include <condition_variable>
 
-class TCP_connection : public boost::enable_shared_from_this<TCP_connection>
+class TCP_connection : public std::enable_shared_from_this<TCP_connection>
 {
 private:
 	TCP_connection(boost::asio::io_service& io_service);
@@ -14,7 +14,7 @@ private:
 	tcp::socket socket_;
 
 public:
-	typedef boost::shared_ptr<TCP_connection> pointer;
+	typedef std::shared_ptr<TCP_connection> pointer;
 	static pointer create(boost::asio::io_service& io_service);
 	tcp::socket& socket();
 	void start();
