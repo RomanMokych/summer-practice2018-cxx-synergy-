@@ -3,6 +3,8 @@
 #include <vector>
 #include <string>
 #include <conio.h>
+#include "BoostServer.h"
+#include "BoostClient.h"
 using namespace std;
 
 
