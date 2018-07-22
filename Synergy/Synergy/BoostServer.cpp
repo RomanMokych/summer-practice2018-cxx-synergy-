@@ -5,10 +5,16 @@ void BoostServer::start_accept()
 {
 	TCP_connection::pointer new_connection =
 		TCP_connection::create(acceptor_.get_io_service());
+	
+	/*if (new_connection.use_count() != 0) {
+		connections.insert(std::pair<std::string, TCP_connection::pointer>(new_connection->socket().remote_endpoint().address().to_string(), new_connection));
+		std::cout << connections.find(new_connection->socket().remote_endpoint().address().to_string())->first << std::endl;
+	}*/
 
 	acceptor_.async_accept(new_connection->socket(),
 		boost::bind(&BoostServer::handle_accept, this, new_connection,
 			boost::asio::placeholders::error));
+
 }
 
 void BoostServer::handle_accept(TCP_connection::pointer new_connection, const boost::system::error_code & error)

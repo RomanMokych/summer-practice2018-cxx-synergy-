@@ -1,17 +1,23 @@
 #pragma once
+#include <iostream>
 #include <vector>
 #include <string>
-#include <iostream>
+#include <conio.h>
 using namespace std;
 
-class ISynegy
+
+class ISynergy
 {
-private:
+	unsigned port_number;
 	int choice;
 	vector<std::string> ip_adress;
+	string server_ip_adress;
 public:
-	ISynegy();
-	~ISynegy();
+	ISynergy();
+	~ISynergy();
 	void MainMenu();
+	void ServerMode();
+	void ClientMode();
+
 };
 
