@@ -61,3 +61,25 @@ void TCP_connection::start()
 		}
 	}
 }
+
+void TCP_connection::SetConnections()
+{
+	boost::asio::ip::tcp::no_delay noDelayOption(true);
+	socket_.set_option(noDelayOption);
+	if (!InputHandler::Instance().sentMessage.empty())
+	{
+		try
+		{
+			boost::asio::write(socket(),
+				boost::asio::buffer(InputHandler::Instance().sentMessage.front()));
+			InputHandler::Instance().sentMessage.pop();
+		}
+		catch (std::exception &ex)
+		{
+			std::cout << "Client disconnected" << std::endl;
+			InputHandler::Instance().hasConnection = false;
+			InputHandler::Instance().isCurrentComputerDisabled = false;
+			return;
+		}
+	}
+}

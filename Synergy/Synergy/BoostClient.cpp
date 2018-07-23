@@ -74,7 +74,7 @@ void BClient::handle_receive(const boost::system::error_code& error, size_t byte
 	{
 		strRecvMessage = buff;
 		Emulator::ParseMSG(strRecvMessage);
-		std::cout << "Message from server : " << strRecvMessage<< std::endl;
+		//std::cout << "Message from server : " << strRecvMessage<< std::endl;
 		PostReceive();
 	}
 }

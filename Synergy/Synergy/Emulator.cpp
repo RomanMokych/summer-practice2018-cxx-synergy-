@@ -178,9 +178,18 @@ void Emulator::ParseMSG(std::string strRecvMessage)
 	}
 	else if (strRecvMessage[0] == '7')
 	{
-		for (size_t i = 0; i < 4; i++)
+		std::string neighbours[5] = { "0" };
+		for (size_t i = 0; i < 5; i++)
 		{
-			iss >> InputHandler::Instance().neighbours[i];
+			iss >> neighbours[i];
+		}
+		for (int i = 1; i < 5; i++)
+		{
+			InputHandler::Instance().neighbours[i - 1] = neighbours[i];
+		}
+		for (int i = 0; i < 4; i++)
+		{
+			std::cout << InputHandler::Instance().neighbours[i] << std::endl;
 		}
 	}
 }

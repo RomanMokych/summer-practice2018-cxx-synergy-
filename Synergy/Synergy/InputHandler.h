@@ -31,7 +31,7 @@ public:
 	bool MouseEventProcOutOfBorder(LPARAM lParam);
 	std::queue<std::string> sentMessage;
 	char recievedMessage[1024];
-	std::string neighbours[4] = { " " };
+	std::string neighbours[4] = { "0", "0", "0", "0" };
 private:
 	static std::mutex mutex_;
 	InputHandler()

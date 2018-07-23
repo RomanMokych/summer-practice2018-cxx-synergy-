@@ -18,5 +18,6 @@ public:
 	static pointer create(boost::asio::io_service& io_service);
 	tcp::socket& socket();
 	void start();
+	void SetConnections();
 };
 
