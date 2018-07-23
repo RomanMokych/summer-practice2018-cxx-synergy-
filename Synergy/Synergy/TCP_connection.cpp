@@ -26,7 +26,7 @@ void TCP_connection::start()
 	boost::asio::ip::tcp::no_delay noDelayOption(true);
 	socket_.set_option(noDelayOption);
 	InputHandler::Instance().hasConnection = true;
-	while (InputHandler::Instance().hasConnection && !InputHandler::Instance().isCurrentComputerDisabled)
+	while (InputHandler::Instance().hasConnection /*&& !InputHandler::Instance().isCurrentComputerDisabled*/)
 	{
 		if (!InputHandler::Instance().sentMessage.empty())
 		{

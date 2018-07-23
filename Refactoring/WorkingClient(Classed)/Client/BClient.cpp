@@ -68,17 +68,17 @@ void BClient::handle_write()
 {
 	boost::asio::write(m_Socket, boost::asio::buffer(buff));
 }
-RECT BClient::getSysMonitor() {
+std::string BClient::getSysMonitor() {
 	RECT DesktopRect;
-	HWND hDesktop = ::GetDesktopWindow();
+	HWND hDesktop = GetDesktopWindow();
 	GetWindowRect(hDesktop, &DesktopRect);
-	return DesktopRect;
+	System.Windows::
+	return DesktopRect.;
 }
 
-std::string BClient::data_compression(int length) 
+std::string BClient::data_compression(int number)
 {
-		if()
-	return "hi";
+	
 }
 
 

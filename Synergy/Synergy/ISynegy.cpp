@@ -43,12 +43,9 @@ void ISynergy::ServerMode() {
 		std::thread keyboardThread(&InputHandler::ServerKeyboardLogger, std::ref(InputHandler::Instance()));
 		boost::asio::io_service io_service;
 		BoostServer server(io_service);
-
-
-
-
+		
+		
 		std::thread serverThread([&] { io_service.run(); });
-
 		mouseThread.detach();
 		keyboardThread.detach();
 		serverThread.join();
