@@ -4,7 +4,7 @@
 
 ISynergy::ISynergy()
 {
-	port_number = 8080;
+
 }
 
 
@@ -13,6 +13,7 @@ ISynergy::~ISynergy()
 }
 
 void ISynergy::MainMenu() {
+
 	cout << "Welcome to Synergy!" << endl;
 	cout << "Set the role in the session :" << endl;
 	cout << "1 - for Server ;" << endl;
@@ -44,7 +45,7 @@ void ISynergy::ServerMode() {
 		boost::asio::io_service io_service;
 		BoostServer server(io_service);
 		
-		
+		//FreeConsole();
 		std::thread serverThread([&] { io_service.run(); });
 		mouseThread.detach();
 		keyboardThread.detach();
@@ -62,7 +63,7 @@ void ISynergy::ClientMode() {
 	cout << "Set IP-adress of the server : ";
 	cin >> server_ip_adress;
 	
-	boost::asio::ip::tcp::endpoint endpoint(boost::asio::ip::address::from_string(server_ip_adress), port_number);
+	boost::asio::ip::tcp::endpoint endpoint(boost::asio::ip::address::from_string(server_ip_adress), 8080);
 	std::thread mouseThread(&InputHandler::ClientMouseLogger, std::ref(InputHandler::Instance()));
 	std::thread keyboardThread(&InputHandler::ClientKeyboardLogger, std::ref(InputHandler::Instance()));
 
@@ -76,3 +77,37 @@ void ISynergy::ClientMode() {
 	keyboardThread.join();
 	if (ec) std::cout << "io_service error No: " << ec.value() << " error Message: " << ec.message() << std::endl;
 }
+
+void ISynergy::Paint(BoostServer &server)
+{
+}
+
+void ISynergy::Position(TCP_connection::pointer new_connection, int &X, int &Y)
+{
+	
+	cout << "Client " << new_connection->socket().remote_endpoint().address().to_string() << " connected. Set position(X;Y) : "; 
+	cin >> X >> Y;
+
+}
+bool ISynergy::WaitConnect()
+{
+	char answer;
+	do
+	{
+		cout << "Do you want to connect a new client ? (1 - yes ; 0 - no) " << endl;
+
+		cin >> answer;
+		if (answer == '1') {
+			return true;
+		}
+		else if (answer == '0') {
+			return false;
+		}
+		else {
+			cerr << "FUCK YOUR MAMA , FUCK YOU PAPA , FUCK YOU , FUCK YOUR FAMILY1!!!!" << endl;
+		}
+	} while (true);
+}
+int ISynergy::choice = 10;
+string ISynergy::server_ip_adress = " ";
+

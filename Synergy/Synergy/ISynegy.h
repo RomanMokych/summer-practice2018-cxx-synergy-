@@ -9,17 +9,20 @@
 using namespace std;
 
 
-class ISynergy
+static class ISynergy
 {
-	unsigned port_number;
-	int choice;
-	string server_ip_adress;
+	static int choice ;
+	static string server_ip_adress;
+
 public:
 	ISynergy();
 	~ISynergy();
-	void MainMenu();
-	void ServerMode();
-	void ClientMode();
+	static void MainMenu();
+	static void ServerMode();
+	static void ClientMode();
+	static void Paint(BoostServer &server);
+	static void Position(TCP_connection::pointer new_connection, int &X, int &Y);
+	static bool WaitConnect();
 
 };
 
