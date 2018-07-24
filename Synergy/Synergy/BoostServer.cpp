@@ -41,41 +41,41 @@ void BoostServer::handle_accept(TCP_connection::pointer new_connection, const bo
 			// TODO make proper indexes
 			for (auto iter = connections.begin(); iter != connections.end(); iter++)
 			{
-				std::string message = "7 0 0 0 0 ";
+				std::string message = "7 0 0 0 0";
 				if (connections.find(std::make_pair(iter->first.first, iter->first.second - 1)) != connections.end())
 				{
-					message[4] = '1';
+					message[6] = '1';
 				}
 				else
 				{
 					if (std::make_pair(iter->first.first, iter->first.second - 1) == std::make_pair(0, 0))
 					{
-						InputHandler::Instance().neighbours[3] = "1";
-						message[4] = '1';
+						InputHandler::Instance().neighbours[0] = "1";
+						message[6] = '1';
 					}
 				}
 				if (connections.find(std::make_pair(iter->first.first + 1, iter->first.second)) != connections.end())
 				{
-					message[2] = '1';
+					message[4] = '1';
 				}
 				else
 				{
 					if (std::make_pair(iter->first.first + 1, iter->first.second) == std::make_pair(0, 0))
 					{
-						InputHandler::Instance().neighbours[2] = "1";
-						message[2] = '1';
+						InputHandler::Instance().neighbours[3] = "1";
+						message[4] = '1';
 					}
 				}
 				if (connections.find(std::make_pair(iter->first.first, iter->first.second + 1)) != connections.end())
 				{
-					message[8] = '1';
+					message[2] = '1';
 				}
 				else
 				{
 					if (std::make_pair(iter->first.first, iter->first.second + 1) == std::make_pair(0, 0))
 					{
-						InputHandler::Instance().neighbours[1] = "1";
-						message[8] = '1';
+						InputHandler::Instance().neighbours[2] = "1";
+						message[2] = '1';
 					}
 				}
 				if (connections.find(std::make_pair(iter->first.first - 1, iter->first.second)) != connections.end())
@@ -86,19 +86,17 @@ void BoostServer::handle_accept(TCP_connection::pointer new_connection, const bo
 				{
 					if (std::make_pair(iter->first.first - 1, iter->first.second) == std::make_pair(0, 0))
 					{
-						InputHandler::Instance().neighbours[0] = "1";
-						message[6] = '1';
+						InputHandler::Instance().neighbours[1] = "1";
+						message[8] = '1';
 					}
 				}
-				message += '\0';
 				std::cout << message << std::endl;
 				InputHandler::Instance().sentMessage.push(message);
-				std::thread(&TCP_connection::SetConnections, iter->second).detach();
+				std::thread(&TCP_connection::SetConnections, iter->second).join();
 			}
 			std::thread(&TCP_connection::start, new_connection).detach();
 		}
 	}
-
 	start_accept();
 }
 

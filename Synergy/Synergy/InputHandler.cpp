@@ -189,7 +189,7 @@ bool InputHandler::MouseEventProcOutOfBorder(LPARAM lParam)
 		if (pMouseStruct->pt.x - mousePosition.x < 0 && 
 			mousePosition.x == 0 &&
 			!isCurrentComputerDisabled &&
-			neighbours[0] != "0")
+			neighbours[3] != "0")
 		{
 			isCurrentComputerDisabled = true;
 			yCoord = (float)P.y / GetSystemMetrics(SM_CYSCREEN);
@@ -213,7 +213,7 @@ bool InputHandler::MouseEventProcOutOfBorder(LPARAM lParam)
 		if (pMouseStruct->pt.y - mousePosition.y < 0 && 
 			mousePosition.y == 0 &&
 			!isCurrentComputerDisabled &&
-			neighbours[2] != "0")
+			neighbours[0] != "0")
 		{
 			isCurrentComputerDisabled = true;
 			yCoord = (float)P.x / GetSystemMetrics(SM_CXSCREEN);
@@ -225,7 +225,7 @@ bool InputHandler::MouseEventProcOutOfBorder(LPARAM lParam)
 		if (pMouseStruct->pt.y - mousePosition.y > 0 &&
 			mousePosition.y == GetSystemMetrics(SM_CYSCREEN) - 1 &&
 			!isCurrentComputerDisabled &&
-			neighbours[3] != "0")
+			neighbours[2] != "0")
 		{
 			isCurrentComputerDisabled = true;
 			yCoord = (float)P.x / GetSystemMetrics(SM_CXSCREEN);
