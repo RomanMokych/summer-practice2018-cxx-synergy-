@@ -17,7 +17,7 @@ LRESULT CALLBACK KeyboardEventProcServer(int nCode, WPARAM wParam, LPARAM lParam
 		std::string message = "0 " + action + ' ' + lparam + ' ' + kcode + '\0';
 		//std::cout << message << std::endl;
 
-		if (InputHandler::Instance().hasConnection && (wParam != WM_KEYUP))
+		if (InputHandler::Instance().hasConnection /*&& (wParam != WM_KEYUP)*/)
 		{
 			InputHandler::Instance().sentMessage.push(message);
 		}
@@ -173,7 +173,7 @@ int InputHandler::GetKeyBoardAction(WPARAM wParam)
 	case WM_KEYUP:
 		return KEYEVENTF_KEYUP;
 	default:
-		return 0 ;
+		return -1;
 		break;
 	}
 }

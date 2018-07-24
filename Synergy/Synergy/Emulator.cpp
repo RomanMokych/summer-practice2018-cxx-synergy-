@@ -85,7 +85,7 @@ void Emulator::ParseMSG(std::string strRecvMessage)
 		int lval = atoi(code[2].c_str());
 
 		unsigned short val = (unsigned short)atoi(code[3].c_str());
-		Emulator::KeyAction(val, lval);
+		Emulator::KeyAction(val, wval);
 	}
 	else if (strRecvMessage[0] == '2')
 	{
@@ -186,10 +186,6 @@ void Emulator::ParseMSG(std::string strRecvMessage)
 		for (int i = 1; i < 5; i++)
 		{
 			InputHandler::Instance().neighbours[i - 1] = neighbours[i];
-		}
-		for (int i = 0; i < 4; i++)
-		{
-			std::cout << InputHandler::Instance().neighbours[i] << std::endl;
 		}
 	}
 }
