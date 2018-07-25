@@ -1,11 +1,15 @@
 #pragma once
+#include <boost/asio.hpp>
 #include <iostream>
 #include <vector>
 #include <string>
 #include <conio.h>
-#include "BoostServer.h"
-#include "BoostClient.h"
-#include "TCP_connection.h"
+
+#include "..\SynergyLib\InputHandler.h"
+#include "..\SynergyLib\BoostServer.h"
+#include "..\SynergyLib\BoostClient.h"
+#include "..\SynergyLib\Emulator.h"
+
 using namespace std;
 
 
@@ -20,9 +24,6 @@ public:
 	static void MainMenu();
 	static void ServerMode();
 	static void ClientMode();
-	static void Paint(BoostServer &server);
-	static void Position(TCP_connection::pointer new_connection, int &X, int &Y);
-	static bool WaitConnect();
 
 };
 
