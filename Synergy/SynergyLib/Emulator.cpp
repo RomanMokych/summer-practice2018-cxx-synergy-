@@ -66,17 +66,10 @@ void Emulator::ParseMSG(std::string strRecvMessage)
 	}
 	else if (strRecvMessage[0] == '0')
 	{
-		std::string code[4] = { " " };
-
-		for (int i = 0; i < 4; i++)
-		{
-			iss >> code[i];
-		}
-		int wval = atoi(code[1].c_str());
-		int lval = atoi(code[2].c_str());
-
-		unsigned short val = (unsigned short)atoi(code[3].c_str());
-		Emulator::KeyAction(val, wval);
+		
+		int key, state;
+		MessagesParser::ParseKeyboardActionEvent(strRecvMessage, &key ,&state);
+		Emulator::KeyAction(key, state);
 	}
 	else if (strRecvMessage[0] == '2')
 	{

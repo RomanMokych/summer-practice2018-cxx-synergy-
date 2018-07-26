@@ -39,3 +39,25 @@ TEST(MessagesParser, ParseMouseActionEventRightClick) {
 	EXPECT_EQ(2, y);
 	EXPECT_EQ(8, w);
 }
+
+TEST(MessagesParser, CtrlPressDown) {
+	int key = 0;
+	int state = 0;
+
+	MessagesParser::ParseKeyboardActionEvent("0 0 2 162",&key,&state);
+
+	EXPECT_EQ(162, key);
+	EXPECT_EQ(0, state);
+
+}
+
+TEST(MessagesParser, CtrlPressUp) {
+	int key = 0;
+	int state = 0;
+
+	MessagesParser::ParseKeyboardActionEvent("0 2 2 162", &key, &state);
+
+	EXPECT_EQ(162, key);
+	EXPECT_EQ(2, state);
+
+}

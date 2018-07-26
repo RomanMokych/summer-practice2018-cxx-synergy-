@@ -11,7 +11,7 @@ MessagesParser::~MessagesParser()
 {
 }
 
-void MessagesParser::ParseMouseEvent(const std::string& message, int* x, int* y, int* w)
+void MessagesParser::ParseMouseEvent(const std::string& message, int* x, int* y, int* action)
 {
 	std::istringstream messageStream(message);
 
@@ -21,8 +21,21 @@ void MessagesParser::ParseMouseEvent(const std::string& message, int* x, int* y,
 		messageStream >> mouse[i];
 	}
 
-	*w = atoi(mouse[1].c_str());
+	*action = atoi(mouse[1].c_str());
 	
 	*x = atoi(mouse[3].c_str());
 	*y = atoi(mouse[4].c_str());
+}
+
+void MessagesParser::ParseKeyboardActionEvent(const std::string & message, int * key, int * state)
+{
+	std::istringstream messageStream(message);
+	std::string code[4] = { " " };
+
+	for (int i = 0; i < 4; i++)
+	{
+		messageStream >> code[i];
+	}
+	*state = atoi(code[1].c_str());
+	*key = (unsigned short)atoi(code[3].c_str());
 }
