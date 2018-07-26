@@ -87,7 +87,7 @@
     </ClCompile>
     <Link>
       <AdditionalLibraryDirectories>E:\C++\boost_1_67_0\stage\lib;C:\boost_1_67_0\stage\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>E:\Apriorit\summer-practice2018-cxx-synergy-\Synergy\Release\SynergyLib.lib;E:\C++\boost_1_67_0\stage\lib\libboost_system-vc141-mt-x32-1_67.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>$(SolutionDir)\$(Configuration)\SynergyLib.lib;E:\C++\boost_1_67_0\stage\lib\libboost_system-vc141-mt-gd-x32-1_67.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -144,9 +144,6 @@
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Synergy.rc" />
-  </ItemGroup>
-  <ItemGroup>
-    <Library Include="..\Release\SynergyLib.lib" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

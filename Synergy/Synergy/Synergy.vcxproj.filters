@@ -35,7 +35,4 @@
       <Filter>Файлы ресурсов</Filter>
     </ResourceCompile>
   </ItemGroup>
-  <ItemGroup>
-    <Library Include="..\Release\SynergyLib.lib" />
-  </ItemGroup>
 </Project>
