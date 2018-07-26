@@ -40,7 +40,9 @@ LRESULT CALLBACK MouseEventProcServer(int nCode, WPARAM wParam, LPARAM lParam)
 				std::string lparam = std::to_string(lParam);
 				if (wParam == WM_MOUSEWHEEL)
 				{
-					delta = std::to_string(GET_WHEEL_DELTA_WPARAM(wParam));
+					MSLLHOOKSTRUCT *mouseHook = (MSLLHOOKSTRUCT*)lParam;
+					short wheelDelta = HIWORD(mouseHook->mouseData);
+					delta = std::to_string(wheelDelta);
 					message = "2 " + action + ' ' + lparam + ' ' + delta + '\0';
 				}
 				else
