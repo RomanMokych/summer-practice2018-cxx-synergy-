@@ -11,15 +11,9 @@ LRESULT CALLBACK KeyboardEventProcServer(int nCode, WPARAM wParam, LPARAM lParam
 	KBDLLHOOKSTRUCT *hooked_key = (KBDLLHOOKSTRUCT*)lParam;
 	if (hooked_key != NULL)
 	{
-		std::string action = std::to_string(InputHandler::Instance().GetKeyBoardAction(wParam));
-		std::string lparam = std::to_string(lParam);
-		std::string kcode = std::to_string(hooked_key->vkCode);
-		std::string message = "0 " + action + ' ' + lparam + ' ' + kcode + '\0';
-		//std::cout << message << std::endl;
-
 		if (InputHandler::Instance().hasConnection /*&& (wParam != WM_KEYUP)*/)
 		{
-			InputHandler::Instance().sentMessage.push(message);
+			Messenger::Instance().AddKeyboardMessage(wParam, lParam, hooked_key->vkCode);
 		}
 		return (InputHandler::Instance().isCurrentComputerDisabled ? 1 : CallNextHookEx(InputHandler::Instance().hKeyboardHook, nCode, wParam, lParam));
 	}
@@ -34,27 +28,10 @@ LRESULT CALLBACK MouseEventProcServer(int nCode, WPARAM wParam, LPARAM lParam)
 		{
 			if (!InputHandler::Instance().MouseEventProcOutOfBorder(lParam))
 			{
-				std::string action = std::to_string(InputHandler::Instance().GetMouseAction(wParam));
-				std::string delta;
-				std::string message;
-				std::string lparam = std::to_string(lParam);
-				if (wParam == WM_MOUSEWHEEL)
-				{
-					MSLLHOOKSTRUCT *mouseHook = (MSLLHOOKSTRUCT*)lParam;
-					short wheelDelta = HIWORD(mouseHook->mouseData);
-					delta = std::to_string(wheelDelta);
-					message = "2 " + action + ' ' + lparam + ' ' + delta + '\0';
-				}
-				else
-				{
-					short dx = pMouseStruct->pt.x - InputHandler::Instance().mousePosition.x;
-					short dy = pMouseStruct->pt.y - InputHandler::Instance().mousePosition.y;
-					delta = std::to_string(dx) + ' ' + std::to_string(dy);
-					message = "1 " + action + ' ' + lparam + ' ' + delta + '\0';
-				}
+				
 				if (InputHandler::Instance().hasConnection)
 				{
-					InputHandler::Instance().sentMessage.push(message);
+					Messenger::Instance().AddMouseMessage(wParam, lParam, InputHandler::Instance().mousePosition);
 				}
 				GetCursorPos(&InputHandler::Instance().mousePosition);
 			}
@@ -134,62 +111,6 @@ void InputHandler::MessageLoop()
 	}
 }
 
-int InputHandler::GetMouseAction(WPARAM wParam)
-{
-	switch (wParam)
-	{
-	case WM_LBUTTONDOWN:
-		return MOUSEEVENTF_LEFTDOWN;
-		break;
-	case WM_LBUTTONUP:
-		return MOUSEEVENTF_LEFTUP;
-		break;
-	case WM_MBUTTONDOWN:
-		return MOUSEEVENTF_MIDDLEDOWN;
-		break;
-	case WM_MBUTTONUP:
-		return MOUSEEVENTF_MIDDLEUP;
-		break;
-	case WM_RBUTTONDOWN:
-		return MOUSEEVENTF_RIGHTDOWN;
-		break;
-	case WM_RBUTTONUP:
-		return MOUSEEVENTF_RIGHTUP;
-		break;
-	case WM_XBUTTONDOWN:
-		return MOUSEEVENTF_XDOWN;
-		break;
-	case WM_XBUTTONUP:
-		return MOUSEEVENTF_XUP;
-		break;
-	case WM_MOUSEWHEEL:
-		return MOUSEEVENTF_WHEEL;
-		break;
-	case WM_MOUSEMOVE:
-		return MOUSEEVENTF_MOVE;
-		break;
-	default:
-		return -1;
-		break;
-	}
-}
-
-int InputHandler::GetKeyBoardAction(WPARAM wParam)
-{
-	switch (wParam)
-	{
-	case WM_KEYDOWN:
-	case WM_SYSKEYDOWN:
-		return 0;
-	case WM_SYSKEYUP:
-	case WM_KEYUP:
-		return KEYEVENTF_KEYUP;
-	default:
-		return -1;
-		break;
-	}
-}
-
 bool InputHandler::MouseEventProcOutOfBorder(LPARAM lParam)
 {
 	MOUSEHOOKSTRUCT * pMouseStruct = (MOUSEHOOKSTRUCT *)lParam;
@@ -197,15 +118,13 @@ bool InputHandler::MouseEventProcOutOfBorder(LPARAM lParam)
 	{
 		POINT P;
 		GetCursorPos(&P);
-		float yCoord, xCoord;
 		if (pMouseStruct->pt.x - mousePosition.x < 0 && 
 			mousePosition.x == 0 &&
 			!isCurrentComputerDisabled &&
 			neighbours[3] != "0")
 		{
 			isCurrentComputerDisabled = true;
-			yCoord = (float)P.y / GetSystemMetrics(SM_CYSCREEN);
-			sentMessage.push("3 " + std::to_string(yCoord) + '\0');
+			Messenger::Instance().AddOutOfBorderMessage("3 ", (float)P.y / GetSystemMetrics(SM_CYSCREEN));
 			SetCursorPos(GetSystemMetrics(SM_CXSCREEN), GetSystemMetrics(SM_CYSCREEN));
 			GetCursorPos(&mousePosition);
 			return true;
@@ -216,8 +135,7 @@ bool InputHandler::MouseEventProcOutOfBorder(LPARAM lParam)
 			neighbours[1] != "0")
 		{
 			isCurrentComputerDisabled = true;
-			yCoord = (float)P.y / GetSystemMetrics(SM_CYSCREEN);
-			sentMessage.push("4 " + std::to_string(yCoord) + '\0');
+			Messenger::Instance().AddOutOfBorderMessage("4 ", (float)P.y / GetSystemMetrics(SM_CYSCREEN));
 			SetCursorPos(GetSystemMetrics(SM_CXSCREEN), GetSystemMetrics(SM_CYSCREEN));
 			GetCursorPos(&mousePosition);
 			return true;
@@ -228,8 +146,7 @@ bool InputHandler::MouseEventProcOutOfBorder(LPARAM lParam)
 			neighbours[0] != "0")
 		{
 			isCurrentComputerDisabled = true;
-			yCoord = (float)P.x / GetSystemMetrics(SM_CXSCREEN);
-			sentMessage.push("5 " + std::to_string(yCoord) + '\0');
+			Messenger::Instance().AddOutOfBorderMessage("5 ", (float)P.x / GetSystemMetrics(SM_CXSCREEN));
 			SetCursorPos(GetSystemMetrics(SM_CXSCREEN), GetSystemMetrics(SM_CYSCREEN));
 			GetCursorPos(&mousePosition);
 			return true;
@@ -240,8 +157,7 @@ bool InputHandler::MouseEventProcOutOfBorder(LPARAM lParam)
 			neighbours[2] != "0")
 		{
 			isCurrentComputerDisabled = true;
-			yCoord = (float)P.x / GetSystemMetrics(SM_CXSCREEN);
-			sentMessage.push("6 " + std::to_string(yCoord) + '\0');
+			Messenger::Instance().AddOutOfBorderMessage("6 ", (float)P.x / GetSystemMetrics(SM_CXSCREEN));
 			SetCursorPos(GetSystemMetrics(SM_CXSCREEN), GetSystemMetrics(SM_CYSCREEN));
 			GetCursorPos(&mousePosition);
 			return true;

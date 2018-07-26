@@ -91,7 +91,7 @@ void BoostServer::handle_accept(TCP_connection::pointer new_connection, const bo
 					}
 				}
 				std::cout << message << std::endl;
-				InputHandler::Instance().sentMessage.push(message);
+				Messenger::Instance().sentMessages.push(message);
 				std::thread(&TCP_connection::SetConnections, iter->second).join();
 			}
 			std::thread(&TCP_connection::start, new_connection).detach();

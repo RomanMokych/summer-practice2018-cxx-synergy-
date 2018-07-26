@@ -19,12 +19,12 @@ void BClient::Connect(boost::asio::ip::tcp::endpoint& endpoint)
 
 void BClient::PostReceive()
 {
-	if (!InputHandler::Instance().sentMessage.empty())
+	if (!Messenger::Instance().sentMessages.empty())
 	{
 		try {
-			std::cout << InputHandler::Instance().sentMessage.front() << std::endl;
-			boost::asio::write(m_Socket, boost::asio::buffer(InputHandler::Instance().sentMessage.front()));
-			InputHandler::Instance().sentMessage.pop();
+			std::cout << Messenger::Instance().sentMessages.front() << std::endl;
+			boost::asio::write(m_Socket, boost::asio::buffer(Messenger::Instance().sentMessages.front()));
+			Messenger::Instance().sentMessages.pop();
 		}
 		catch (std::exception&) {
 			return;

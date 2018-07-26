@@ -164,6 +164,7 @@
     <ClInclude Include="Emulator.h" />
     <ClInclude Include="InputHandler.h" />
     <ClInclude Include="MessagesParser.h" />
+    <ClInclude Include="Messenger.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="TCP_connection.h" />
   </ItemGroup>
@@ -173,6 +174,7 @@
     <ClCompile Include="Emulator.cpp" />
     <ClCompile Include="InputHandler.cpp" />
     <ClCompile Include="MessagesParser.cpp" />
+    <ClCompile Include="Messenger.cpp" />
     <ClCompile Include="TCP_connection.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

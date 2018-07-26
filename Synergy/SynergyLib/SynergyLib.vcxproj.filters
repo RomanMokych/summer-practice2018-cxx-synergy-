@@ -36,6 +36,9 @@
     <ClInclude Include="MessagesParser.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Messenger.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BoostClient.cpp">
@@ -54,6 +57,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="MessagesParser.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Messenger.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

@@ -6,7 +6,7 @@ TCP_connection::TCP_connection(boost::asio::io_service& io_service) : socket_(io
 
 void TCP_connection::handle_read(const boost::system::error_code &, size_t)
 {
-	Emulator::ParseMSG(InputHandler::Instance().recievedMessage);
+	Emulator::ParseMSG(Messenger::Instance().recievedMessage);
 }
 
 void TCP_connection::handle_write(const boost::system::error_code & error, size_t bytes_transferred) {}
@@ -28,14 +28,14 @@ void TCP_connection::start()
 	InputHandler::Instance().hasConnection = true;
 	while (InputHandler::Instance().hasConnection /*&& !InputHandler::Instance().isCurrentComputerDisabled*/)
 	{
-		if (!InputHandler::Instance().sentMessage.empty())
+		if (!Messenger::Instance().sentMessages.empty())
 		{
 			try
 			{
 
 				boost::asio::write(socket(),
-					boost::asio::buffer(InputHandler::Instance().sentMessage.front()));
-				InputHandler::Instance().sentMessage.pop();
+					boost::asio::buffer(Messenger::Instance().sentMessages.front()));
+				Messenger::Instance().sentMessages.pop();
 			}
 			catch (std::exception &ex)
 			{
@@ -47,7 +47,7 @@ void TCP_connection::start()
 			try
 			{
 				socket().async_read_some(
-					boost::asio::buffer(InputHandler::Instance().recievedMessage),
+					boost::asio::buffer(Messenger::Instance().recievedMessage),
 					boost::bind(&TCP_connection::handle_read, shared_from_this(),
 						boost::asio::placeholders::error, boost::asio::placeholders::bytes_transferred));
 			}
@@ -66,13 +66,13 @@ void TCP_connection::SetConnections()
 {
 	boost::asio::ip::tcp::no_delay noDelayOption(true);
 	socket_.set_option(noDelayOption);
-	if (!InputHandler::Instance().sentMessage.empty())
+	if (!Messenger::Instance().sentMessages.empty())
 	{
 		try
 		{
 			boost::asio::write(socket(),
-				boost::asio::buffer(InputHandler::Instance().sentMessage.front()));
-			InputHandler::Instance().sentMessage.pop();
+				boost::asio::buffer(Messenger::Instance().sentMessages.front()));
+			Messenger::Instance().sentMessages.pop();
 		}
 		catch (std::exception &ex)
 		{

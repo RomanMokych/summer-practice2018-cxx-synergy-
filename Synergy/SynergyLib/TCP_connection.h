@@ -1,8 +1,7 @@
 #pragma once
+#include "Messenger.h"
 #include "InputHandler.h"
 #include "Emulator.h"
-#include <mutex>
-#include <condition_variable>
 
 class TCP_connection : public std::enable_shared_from_this<TCP_connection>
 {
