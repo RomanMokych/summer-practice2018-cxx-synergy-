@@ -39,7 +39,13 @@ TEST(MessagesParser, ParseMouseActionEventRightClick) {
 	EXPECT_EQ(2, y);
 	EXPECT_EQ(8, w);
 }
+TEST(MessagesParser, Mouse) {
+	int x = 0;
 
+	MessagesParser::ParseMouseScrollEvent("1 8 0 120 2", &x);
+
+	EXPECT_EQ(120, x);
+}
 TEST(MessagesParser, CtrlPressDown) {
 	int key = 0;
 	int state = 0;

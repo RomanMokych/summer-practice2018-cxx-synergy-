@@ -10,6 +10,6 @@ public:
 
 	static void ParseMouseEvent(const std::string& message, int* x, int* y, int* action);
 	static void ParseKeyboardActionEvent(const std::string& message, int * key , int *state);
-
+	static void ParseMouseScrollEvent(const std::string& message, int *delta);
 };
 

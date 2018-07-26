@@ -35,11 +35,21 @@ LRESULT CALLBACK MouseEventProcServer(int nCode, WPARAM wParam, LPARAM lParam)
 			if (!InputHandler::Instance().MouseEventProcOutOfBorder(lParam))
 			{
 				std::string action = std::to_string(InputHandler::Instance().GetMouseAction(wParam));
+				std::string delta;
+				std::string message;
 				std::string lparam = std::to_string(lParam);
-				short dx = pMouseStruct->pt.x - InputHandler::Instance().mousePosition.x;
-				short dy = pMouseStruct->pt.y - InputHandler::Instance().mousePosition.y;
-				std::string delta = std::to_string(dx) + ' ' + std::to_string(dy);
-				std::string message = "1 " + action + ' ' + lparam + ' ' + delta + '\0';
+				if (wParam == WM_MOUSEWHEEL)
+				{
+					delta = std::to_string(GET_WHEEL_DELTA_WPARAM(wParam));
+					message = "2 " + action + ' ' + lparam + ' ' + delta + '\0';
+				}
+				else
+				{
+					short dx = pMouseStruct->pt.x - InputHandler::Instance().mousePosition.x;
+					short dy = pMouseStruct->pt.y - InputHandler::Instance().mousePosition.y;
+					delta = std::to_string(dx) + ' ' + std::to_string(dy);
+					message = "1 " + action + ' ' + lparam + ' ' + delta + '\0';
+				}
 				if (InputHandler::Instance().hasConnection)
 				{
 					InputHandler::Instance().sentMessage.push(message);

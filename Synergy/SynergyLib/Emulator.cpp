@@ -66,22 +66,14 @@ void Emulator::ParseMSG(std::string strRecvMessage)
 	}
 	else if (strRecvMessage[0] == '0')
 	{
-		
-		int key, state;
+		int key = 0, state = 0;
 		MessagesParser::ParseKeyboardActionEvent(strRecvMessage, &key ,&state);
 		Emulator::KeyAction(key, state);
 	}
 	else if (strRecvMessage[0] == '2')
 	{
-		std::string mouse[4] = { " " };
-		for (size_t i = 0; i < 4; i++)
-		{
-			iss >> mouse[i];
-		}
-		int wval = atoi(mouse[1].c_str());
-		int lval = atoi(mouse[2].c_str());
-
-		DWORD delta = atoi(mouse[3].c_str());
+		int delta = 0;
+		MessagesParser::ParseMouseScrollEvent(strRecvMessage,&delta);
 		Emulator::MouseScroll(delta);
 	}
 	else if (strRecvMessage[0] == '3')
