@@ -48,120 +48,99 @@ void Emulator::MouseMove(int dx, int dy)
 	mouse_event(MOUSEEVENTF_MOVE | 0x2000, dx, dy, 0, 0);
 }
 
+void Emulator::MouseOutOfLeftBorder(float relation)
+{
+	InputHandler::Instance().isCurrentComputerDisabled = false;
+	INPUT input;
+	input.type = INPUT_MOUSE;
+	input.mi.mouseData = 0;
+	input.mi.dx = (GetSystemMetrics(SM_CXSCREEN) - 1)*(65536 / GetSystemMetrics(SM_CXSCREEN)); //x being coord in pixels
+	input.mi.dy = (relation * GetSystemMetrics(SM_CXSCREEN)) * (65536 / GetSystemMetrics(SM_CYSCREEN)); //y being coord in pixels
+	input.mi.dwFlags = MOUSEEVENTF_ABSOLUTE | MOUSEEVENTF_MOVE;
+	SendInput(1, &input, sizeof(input));
+	GetCursorPos(&InputHandler::Instance().mousePosition);
+}
+
+void Emulator::MouseOutOfRightBorder(float relation)
+{
+	InputHandler::Instance().isCurrentComputerDisabled = false;
+	INPUT input;
+	input.type = INPUT_MOUSE;
+	input.mi.mouseData = 0;
+	input.mi.dx = 0;//x being coord in pixels
+	input.mi.dy = (relation * GetSystemMetrics(SM_CXSCREEN)) * (65536 / GetSystemMetrics(SM_CYSCREEN)); //y being coord in pixels
+	input.mi.dwFlags = MOUSEEVENTF_ABSOLUTE | MOUSEEVENTF_MOVE;
+	SendInput(1, &input, sizeof(input));
+	GetCursorPos(&InputHandler::Instance().mousePosition);
+}
+
+void Emulator::MouseOutOfTopBorder(float relation)
+{
+	InputHandler::Instance().isCurrentComputerDisabled = false;
+	INPUT input;
+	input.type = INPUT_MOUSE;
+	input.mi.mouseData = 0;
+	input.mi.dy = (GetSystemMetrics(SM_CYSCREEN) - 1)*(65536 / GetSystemMetrics(SM_CYSCREEN)); //x being coord in pixels
+	input.mi.dx = (relation * GetSystemMetrics(SM_CXSCREEN)) * (65536 / GetSystemMetrics(SM_CXSCREEN)); //y being coord in pixels
+	input.mi.dwFlags = MOUSEEVENTF_ABSOLUTE | MOUSEEVENTF_MOVE;
+	SendInput(1, &input, sizeof(input));
+	GetCursorPos(&InputHandler::Instance().mousePosition);
+}
+
+void Emulator::MouseOutOfBottomBorder(float relation)
+{
+	InputHandler::Instance().isCurrentComputerDisabled = false;
+	INPUT input;
+	input.type = INPUT_MOUSE;
+	input.mi.mouseData = 0;
+	input.mi.dy = 0;//x being coord in pixels
+	input.mi.dx = (relation * GetSystemMetrics(SM_CXSCREEN)) * (65536 / GetSystemMetrics(SM_CXSCREEN)); //y being coord in pixels
+	input.mi.dwFlags = MOUSEEVENTF_ABSOLUTE | MOUSEEVENTF_MOVE;
+	SendInput(1, &input, sizeof(input));
+	GetCursorPos(&InputHandler::Instance().mousePosition);
+}
+
 void Emulator::ParseMSG(std::string strRecvMessage)
 {
-	std::istringstream iss;
-	iss.str(strRecvMessage);
-
-	if (strRecvMessage[0] == '1')
+	switch (strRecvMessage[0])
 	{
-		int x = 0, y = 0, action = 0;
-		MessagesParser::ParseMouseEvent(strRecvMessage, &x, &y, &action);
-
-		Emulator::MouseMove(x, y);
-		if (action != MOUSEEVENTF_MOVE)
+	case '0':
 		{
-			Emulator::MouseAction(action);
+			int key = 0, state = 0;
+			MessagesParser::ParseKeyboardActionEvent(strRecvMessage, &key, &state);
+			Emulator::KeyAction(key, state);
 		}
-	}
-	else if (strRecvMessage[0] == '0')
-	{
-		int key = 0, state = 0;
-		MessagesParser::ParseKeyboardActionEvent(strRecvMessage, &key ,&state);
-		Emulator::KeyAction(key, state);
-	}
-	else if (strRecvMessage[0] == '2')
-	{
-		int delta = 0;
-		MessagesParser::ParseMouseScrollEvent(strRecvMessage,&delta);
-		Emulator::MouseScroll(delta);
-	}
-	else if (strRecvMessage[0] == '3')
-	{
-		std::string mouse[2] = { " " };
-		for (size_t i = 0; i < 2; i++)
+		break;
+	case '1': 
 		{
-			iss >> mouse[i];
+			int x = 0, y = 0, action = 0;
+			MessagesParser::ParseMouseEvent(strRecvMessage, &x, &y, &action);
+			Emulator::MouseMove(x, y);
+			if (action != MOUSEEVENTF_MOVE)
+			{
+				Emulator::MouseAction(action);
+			}
 		}
-		float wval = atof(mouse[1].c_str());
-		int yval = wval * GetSystemMetrics(SM_CYSCREEN);
-		InputHandler::Instance().isCurrentComputerDisabled = false;
-		INPUT input;
-		input.type = INPUT_MOUSE;
-		input.mi.mouseData = 0;
-		input.mi.dx = (GetSystemMetrics(SM_CXSCREEN) - 1)*(65536 / GetSystemMetrics(SM_CXSCREEN)); //x being coord in pixels
-		input.mi.dy = yval * (65536 / GetSystemMetrics(SM_CYSCREEN)); //y being coord in pixels
-		input.mi.dwFlags = MOUSEEVENTF_ABSOLUTE | MOUSEEVENTF_MOVE;
-		SendInput(1, &input, sizeof(input));
-		GetCursorPos(&InputHandler::Instance().mousePosition);
-	}
-	else if (strRecvMessage[0] == '4')
-	{
-		std::string mouse[2] = { " " };
-		for (size_t i = 0; i < 2; i++)
-		{
-			iss >> mouse[i];
-		}
-		float wval = atof(mouse[1].c_str());
-		int yval = wval * GetSystemMetrics(SM_CYSCREEN);
-		InputHandler::Instance().isCurrentComputerDisabled = false;
-		INPUT input;
-		input.type = INPUT_MOUSE;
-		input.mi.mouseData = 0;
-		input.mi.dx = 0;//x being coord in pixels
-		input.mi.dy = yval * (65536 / GetSystemMetrics(SM_CYSCREEN)); //y being coord in pixels
-		input.mi.dwFlags = MOUSEEVENTF_ABSOLUTE | MOUSEEVENTF_MOVE;
-		SendInput(1, &input, sizeof(input));
-		GetCursorPos(&InputHandler::Instance().mousePosition);
-	}
-	else if (strRecvMessage[0] == '5')
-	{
-		std::string mouse[2] = { " " };
-		for (size_t i = 0; i < 2; i++)
-		{
-			iss >> mouse[i];
-		}
-		float wval = atof(mouse[1].c_str());
-		int yval = wval * GetSystemMetrics(SM_CXSCREEN);
-		InputHandler::Instance().isCurrentComputerDisabled = false;
-		INPUT input;
-		input.type = INPUT_MOUSE;
-		input.mi.mouseData = 0;
-		input.mi.dy = (GetSystemMetrics(SM_CYSCREEN) - 1)*(65536 / GetSystemMetrics(SM_CYSCREEN)); //x being coord in pixels
-		input.mi.dx = yval * (65536 / GetSystemMetrics(SM_CXSCREEN)); //y being coord in pixels
-		input.mi.dwFlags = MOUSEEVENTF_ABSOLUTE | MOUSEEVENTF_MOVE;
-		SendInput(1, &input, sizeof(input));
-		GetCursorPos(&InputHandler::Instance().mousePosition);
-	}
-	else if (strRecvMessage[0] == '6')
-	{
-		std::string mouse[2] = { " " };
-		for (size_t i = 0; i < 2; i++)
-		{
-			iss >> mouse[i];
-		}
-		float wval = atof(mouse[1].c_str());
-		int yval = wval * GetSystemMetrics(SM_CXSCREEN);
-		InputHandler::Instance().isCurrentComputerDisabled = false;
-		INPUT input;
-		input.type = INPUT_MOUSE;
-		input.mi.mouseData = 0;
-		input.mi.dy = 0;//x being coord in pixels
-		input.mi.dx = yval * (65536 / GetSystemMetrics(SM_CXSCREEN)); //y being coord in pixels
-		input.mi.dwFlags = MOUSEEVENTF_ABSOLUTE | MOUSEEVENTF_MOVE;
-		SendInput(1, &input, sizeof(input));
-		GetCursorPos(&InputHandler::Instance().mousePosition);
-	}
-	else if (strRecvMessage[0] == '7')
-	{
-		std::string neighbours[5] = { "0" };
-		for (size_t i = 0; i < 5; i++)
-		{
-			iss >> neighbours[i];
-		}
-		for (int i = 1; i < 5; i++)
-		{
-			InputHandler::Instance().neighbours[i - 1] = neighbours[i];
-		}
+		break;
+	case '2':
+		Emulator::MouseScroll(MessagesParser::ParseMouseScrollEvent(strRecvMessage));
+		break;
+	case '3': 
+		Emulator::MouseOutOfLeftBorder(MessagesParser::ParseBorderlineEvent(strRecvMessage));
+		break;
+	case '4':
+		Emulator::MouseOutOfRightBorder(MessagesParser::ParseBorderlineEvent(strRecvMessage));
+		break;
+	case '5': 
+		Emulator::MouseOutOfTopBorder(MessagesParser::ParseBorderlineEvent(strRecvMessage));
+		break;
+	case '6': 
+		Emulator::MouseOutOfBottomBorder(MessagesParser::ParseBorderlineEvent(strRecvMessage));
+		break;
+	case '7': 
+		MessagesParser::ParseNeighbours(strRecvMessage);
+		break;
+	default: 
+		break;
 	}
 }

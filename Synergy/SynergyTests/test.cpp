@@ -39,12 +39,10 @@ TEST(MessagesParser, ParseMouseActionEventRightClick) {
 	EXPECT_EQ(2, y);
 	EXPECT_EQ(8, w);
 }
-TEST(MessagesParser, Mouse) {
-	int x = 0;
+TEST(MessagesParser, MouseScrolling) {
 
-	MessagesParser::ParseMouseScrollEvent("1 8 0 120 2", &x);
+	EXPECT_EQ(120, MessagesParser::ParseMouseScrollEvent("1 8 0 120 2"));
 
-	EXPECT_EQ(120, x);
 }
 TEST(MessagesParser, CtrlPressDown) {
 	int key = 0;
@@ -66,4 +64,9 @@ TEST(MessagesParser, CtrlPressUp) {
 	EXPECT_EQ(162, key);
 	EXPECT_EQ(2, state);
 
+}
+
+TEST(MessagesParser, OutOfBorder) {
+	
+	EXPECT_FLOAT_EQ(0.212f, MessagesParser::ParseBorderlineEvent("3 0.212"));
 }

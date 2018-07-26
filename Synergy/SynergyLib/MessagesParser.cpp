@@ -1,6 +1,5 @@
 #include "MessagesParser.h"
 
-#include <sstream>
 
 MessagesParser::MessagesParser()
 {
@@ -40,7 +39,7 @@ void MessagesParser::ParseKeyboardActionEvent(const std::string & message, int *
 	*key = (unsigned short)atoi(code[3].c_str());
 }
 
-void MessagesParser::ParseMouseScrollEvent(const std::string & message, int * delta)
+int MessagesParser::ParseMouseScrollEvent(const std::string & message)
 {
 	std::istringstream messageStream(message);
 	std::string mouse[4] = { " " };
@@ -50,5 +49,33 @@ void MessagesParser::ParseMouseScrollEvent(const std::string & message, int * de
 		messageStream >> mouse[i];
 	}
 
-	*delta = atoi(mouse[3].c_str());
+	return atoi(mouse[3].c_str());
+}
+
+float MessagesParser::ParseBorderlineEvent(const std::string & message)
+{
+	std::istringstream messageStream(message);
+	std::string mouse[2] = { " " };
+	
+	for (size_t i = 0; i < 2; i++)
+	{
+		messageStream >> mouse[i];
+	}
+	
+	return atof(mouse[1].c_str());
+}
+
+void MessagesParser::ParseNeighbours(const std::string & message)
+{
+	std::istringstream messageStream(message);
+	std::string neighbours[5] = { "0" };
+
+	for (size_t i = 0; i < 5; i++)
+	{
+		messageStream >> neighbours[i];
+	}
+	for (int i = 1; i < 5; i++)
+	{
+		InputHandler::Instance().neighbours[i - 1] = neighbours[i];
+	}
 }
