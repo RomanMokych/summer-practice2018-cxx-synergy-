@@ -55,7 +55,7 @@ void Emulator::MouseOutOfLeftBorder(float relation)
 	input.type = INPUT_MOUSE;
 	input.mi.mouseData = 0;
 	input.mi.dx = (GetSystemMetrics(SM_CXSCREEN) - 1)*(65536 / GetSystemMetrics(SM_CXSCREEN)); //x being coord in pixels
-	input.mi.dy = (relation * GetSystemMetrics(SM_CXSCREEN)) * (65536 / GetSystemMetrics(SM_CYSCREEN)); //y being coord in pixels
+	input.mi.dy = (relation * GetSystemMetrics(SM_CYSCREEN)) * (65536 / GetSystemMetrics(SM_CYSCREEN)); //y being coord in pixels
 	input.mi.dwFlags = MOUSEEVENTF_ABSOLUTE | MOUSEEVENTF_MOVE;
 	SendInput(1, &input, sizeof(input));
 	GetCursorPos(&InputHandler::Instance().mousePosition);
@@ -68,7 +68,7 @@ void Emulator::MouseOutOfRightBorder(float relation)
 	input.type = INPUT_MOUSE;
 	input.mi.mouseData = 0;
 	input.mi.dx = 0;//x being coord in pixels
-	input.mi.dy = (relation * GetSystemMetrics(SM_CXSCREEN)) * (65536 / GetSystemMetrics(SM_CYSCREEN)); //y being coord in pixels
+	input.mi.dy = (relation * GetSystemMetrics(SM_CYSCREEN)) * (65536 / GetSystemMetrics(SM_CYSCREEN)); //y being coord in pixels
 	input.mi.dwFlags = MOUSEEVENTF_ABSOLUTE | MOUSEEVENTF_MOVE;
 	SendInput(1, &input, sizeof(input));
 	GetCursorPos(&InputHandler::Instance().mousePosition);
