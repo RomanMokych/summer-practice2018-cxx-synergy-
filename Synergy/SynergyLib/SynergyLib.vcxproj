@@ -163,6 +163,7 @@
     <ClInclude Include="BoostServer.h" />
     <ClInclude Include="Emulator.h" />
     <ClInclude Include="InputHandler.h" />
+    <ClInclude Include="MessagesParser.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="TCP_connection.h" />
   </ItemGroup>
@@ -171,6 +172,7 @@
     <ClCompile Include="BoostServer.cpp" />
     <ClCompile Include="Emulator.cpp" />
     <ClCompile Include="InputHandler.cpp" />
+    <ClCompile Include="MessagesParser.cpp" />
     <ClCompile Include="TCP_connection.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

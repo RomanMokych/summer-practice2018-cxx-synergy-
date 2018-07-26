@@ -1,5 +1,5 @@
 #include "Emulator.h"
-
+#include "MessagesParser.h"
 
 // @brief Performing keyboard action
 // @param vkey input key
@@ -55,23 +55,14 @@ void Emulator::ParseMSG(std::string strRecvMessage)
 
 	if (strRecvMessage[0] == '1')
 	{
-		std::string mouse[5] = { " " };
-		for (size_t i = 0; i < 5; i++)
+		int x = 0, y = 0, action = 0;
+		MessagesParser::ParseMouseEvent(strRecvMessage, &x, &y, &action);
+
+		Emulator::MouseMove(x, y);
+		if (action != MOUSEEVENTF_MOVE)
 		{
-			iss >> mouse[i];
+			Emulator::MouseAction(action);
 		}
-		int wval = atoi(mouse[1].c_str());
-		int lval = atoi(mouse[2].c_str());
-
-		short xval = (short)atoi(mouse[3].c_str());
-		short yval = (short)atoi(mouse[4].c_str());
-
-		Emulator::MouseMove(xval, yval);
-		if (wval != MOUSEEVENTF_MOVE)
-		{
-			Emulator::MouseAction(wval);
-		}
-
 	}
 	else if (strRecvMessage[0] == '0')
 	{
