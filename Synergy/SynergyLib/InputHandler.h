@@ -24,6 +24,8 @@ public:
 	void MessageLoop();
 	bool MouseEventProcOutOfBorder(LPARAM lParam);
 	std::string neighbours[4] = { "0", "0", "0", "0" };
+
+	bool MouseMoveEventToBorderEvent(const POINT& mousePosition, int screenWidth, int screenHeight);
 private:
 	static std::mutex mutex_;
 	InputHandler()
