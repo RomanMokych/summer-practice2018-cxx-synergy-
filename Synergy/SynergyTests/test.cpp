@@ -1,76 +1,6 @@
 #include "pch.h"
 #include "SynergyLib/MessagesParser.h"
 
-TEST(MessagesParser, ParseMouseMoveEvent) {
-  
-	int x = 0;
-	int y = 0;
-	int w = 0;
-
-	MessagesParser::ParseMouseEvent("1 0 0 1 2", &x, &y, &w);
-
-	EXPECT_EQ(1, x);
-	EXPECT_EQ(2, y);
-	EXPECT_EQ(0, w);
-}
-
-TEST(MessagesParser, ParseMouseActionEventLeftClick) {
-
-	int x = 0;
-	int y = 0;
-	int w = 0;
-
-	MessagesParser::ParseMouseEvent("1 2 0 1 2", &x, &y, &w);
-
-	EXPECT_EQ(1, x);
-	EXPECT_EQ(2, y);
-	EXPECT_EQ(2, w);
-}
-
-TEST(MessagesParser, ParseMouseActionEventRightClick) {
-
-	int x = 0;
-	int y = 0;
-	int w = 0;
-
-	MessagesParser::ParseMouseEvent("1 8 0 1 2", &x, &y, &w);
-
-	EXPECT_EQ(1, x);
-	EXPECT_EQ(2, y);
-	EXPECT_EQ(8, w);
-}
-TEST(MessagesParser, MouseScrolling) {
-
-	EXPECT_EQ(120, MessagesParser::ParseMouseScrollEvent("1 8 0 120 2"));
-
-}
-TEST(MessagesParser, CtrlPressDown) {
-	int key = 0;
-	int state = 0;
-
-	MessagesParser::ParseKeyboardActionEvent("0 0 2 162",&key,&state);
-
-	EXPECT_EQ(162, key);
-	EXPECT_EQ(0, state);
-
-}
-
-TEST(MessagesParser, CtrlPressUp) {
-	int key = 0;
-	int state = 0;
-
-	MessagesParser::ParseKeyboardActionEvent("0 2 2 162", &key, &state);
-
-	EXPECT_EQ(162, key);
-	EXPECT_EQ(2, state);
-
-}
-
-TEST(MessagesParser, OutOfBorder) {
-	
-	EXPECT_FLOAT_EQ(0.212f, MessagesParser::ParseBorderlineEvent("3 0.212"));
-}
-
 TEST(Messenger, ConvertingKeyboardActions) {
 	EXPECT_EQ(2, Messenger::Instance().GetKeyBoardAction(257));
 }
@@ -95,4 +25,36 @@ TEST(Messenger, CtrlRelease) {
 	std::string s2 = "0 2 0 162";
 	EXPECT_STREQ(s2.c_str(), temp.c_str());
 	Messenger::Instance().sentMessages.pop();
+}
+
+TEST(Messenger, KeyBoardSwitchCheck) {
+	
+	EXPECT_EQ(0, Messenger::Instance().GetKeyBoardAction(WM_KEYDOWN));
+	EXPECT_EQ(0, Messenger::Instance().GetKeyBoardAction(WM_SYSKEYDOWN));
+
+	EXPECT_EQ(KEYEVENTF_KEYUP, Messenger::Instance().GetKeyBoardAction(WM_KEYUP));
+	EXPECT_EQ(KEYEVENTF_KEYUP, Messenger::Instance().GetKeyBoardAction(WM_SYSKEYUP));
+
+	EXPECT_EQ(-1, Messenger::Instance().GetKeyBoardAction(0x111));
+
+}
+
+TEST(Messenger, MouseSwitchCheck) {
+
+	EXPECT_EQ(MOUSEEVENTF_LEFTDOWN, Messenger::Instance().GetMouseAction(WM_LBUTTONDOWN));
+	EXPECT_EQ(MOUSEEVENTF_LEFTUP, Messenger::Instance().GetMouseAction(WM_LBUTTONUP));
+	
+	EXPECT_EQ(MOUSEEVENTF_MIDDLEDOWN, Messenger::Instance().GetMouseAction(WM_MBUTTONDOWN));
+	EXPECT_EQ(MOUSEEVENTF_MIDDLEUP, Messenger::Instance().GetMouseAction(WM_MBUTTONUP));
+
+	EXPECT_EQ(MOUSEEVENTF_RIGHTDOWN, Messenger::Instance().GetMouseAction(WM_RBUTTONDOWN));
+	EXPECT_EQ(MOUSEEVENTF_RIGHTUP, Messenger::Instance().GetMouseAction(WM_RBUTTONUP));
+	
+	EXPECT_EQ(MOUSEEVENTF_XDOWN, Messenger::Instance().GetMouseAction(WM_XBUTTONDOWN));
+	EXPECT_EQ(MOUSEEVENTF_XUP, Messenger::Instance().GetMouseAction(WM_XBUTTONUP));
+	
+	EXPECT_EQ(MOUSEEVENTF_WHEEL, Messenger::Instance().GetMouseAction(WM_MOUSEWHEEL));
+	EXPECT_EQ(MOUSEEVENTF_MOVE, Messenger::Instance().GetMouseAction(WM_MOUSEMOVE));
+	
+	EXPECT_EQ(-1, Messenger::Instance().GetMouseAction(0X111));
 }
