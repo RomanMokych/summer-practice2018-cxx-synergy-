@@ -70,3 +70,29 @@ TEST(MessagesParser, OutOfBorder) {
 	
 	EXPECT_FLOAT_EQ(0.212f, MessagesParser::ParseBorderlineEvent("3 0.212"));
 }
+
+TEST(Messenger, ConvertingKeyboardActions) {
+	EXPECT_EQ(2, Messenger::Instance().GetKeyBoardAction(257));
+}
+
+
+TEST(Messenger, ConvertingMouseActions) {
+	EXPECT_EQ(MOUSEEVENTF_MOVE, Messenger::Instance().GetMouseAction(WM_MOUSEMOVE));
+}
+
+
+TEST(Messenger, CtrlPressed) {
+	Messenger::Instance().AddKeyboardMessage(260, 0, 162);
+	std::string temp = Messenger::Instance().sentMessages.front();
+	std::string s2 = "0 0 0 162";
+	EXPECT_STREQ(s2.c_str(),temp.c_str());
+	Messenger::Instance().sentMessages.pop();
+}
+
+TEST(Messenger, CtrlRelease) {
+	Messenger::Instance().AddKeyboardMessage(257, 0, 162);
+	std::string temp = Messenger::Instance().sentMessages.front();
+	std::string s2 = "0 2 0 162";
+	EXPECT_STREQ(s2.c_str(), temp.c_str());
+	Messenger::Instance().sentMessages.pop();
+}
