@@ -4,7 +4,6 @@
 
 Messenger & Messenger::Instance()
 {
-	// TODO: insert return statement here
 	std::unique_lock <std::mutex> unique(mutex_);
 	static Messenger instance;
 	return instance;

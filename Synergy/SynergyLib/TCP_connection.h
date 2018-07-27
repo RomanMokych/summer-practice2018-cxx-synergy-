@@ -11,7 +11,7 @@ private:
 		size_t /*bytes_transferred*/);
 	void handle_read(const boost::system::error_code& error, size_t bytes_transferred);
 	tcp::socket socket_;
-
+	void ContinueReading();
 public:
 	typedef std::shared_ptr<TCP_connection> pointer;
 	static pointer create(boost::asio::io_service& io_service);

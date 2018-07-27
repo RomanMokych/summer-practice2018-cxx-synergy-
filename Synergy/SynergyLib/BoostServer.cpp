@@ -92,7 +92,7 @@ void BoostServer::handle_accept(TCP_connection::pointer new_connection, const bo
 				}
 				std::cout << message << std::endl;
 				Messenger::Instance().sentMessages.push(message);
-				std::thread(&TCP_connection::SetConnections, iter->second).join();
+				iter->second->SetConnections();
 			}
 			std::thread(&TCP_connection::start, new_connection).detach();
 		}
@@ -133,7 +133,7 @@ bool BoostServer::WaitConnect()
 			return false;
 		}
 		else {
-			std::cerr << "FUCK YOUR MAMA , FUCK YOU PAPA , FUCK YOU , FUCK YOUR FAMILY1!!!!" << std::endl;
+			std::cin.clear();
 		}
 	} while (true);
 }

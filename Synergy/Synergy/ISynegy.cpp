@@ -46,10 +46,9 @@ void ISynergy::ServerMode() {
 		BoostServer server(io_service);
 		
 		//FreeConsole();
-		std::thread serverThread([&] { io_service.run(); });
-		mouseThread.detach();
-		keyboardThread.detach();
-		serverThread.join();
+		io_service.run();
+		mouseThread.join();
+		keyboardThread.join();
 	}
 	catch (const std::exception &ex)
 	{
