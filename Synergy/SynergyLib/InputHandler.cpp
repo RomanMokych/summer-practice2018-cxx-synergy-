@@ -13,7 +13,7 @@ LRESULT CALLBACK KeyboardEventProcServer(int nCode, WPARAM wParam, LPARAM lParam
 	{
 		if (InputHandler::Instance().hasConnection /*&& (wParam != WM_KEYUP)*/)
 		{
-			Messenger::Instance().AddKeyboardMessage(wParam, lParam, hooked_key->vkCode);
+			Messenger::Instance().AddKeyboardMessage(wParam, hooked_key->vkCode);
 		}
 		return (InputHandler::Instance().isCurrentComputerDisabled ? 1 : CallNextHookEx(InputHandler::Instance().hKeyboardHook, nCode, wParam, lParam));
 	}

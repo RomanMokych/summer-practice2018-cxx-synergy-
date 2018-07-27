@@ -1,4 +1,5 @@
 #include "pch.h"
+#include "SynergyLib/Messenger.h"
 #include "SynergyLib/MessagesParser.h"
 
 TEST(Messenger, ConvertingKeyboardActions) {
@@ -12,17 +13,17 @@ TEST(Messenger, ConvertingMouseActions) {
 
 
 TEST(Messenger, CtrlPressed) {
-	Messenger::Instance().AddKeyboardMessage(260, 0, 162);
+	Messenger::Instance().AddKeyboardMessage(260, 162);
 	std::string temp = Messenger::Instance().sentMessages.front();
-	std::string s2 = "0 0 0 162";
+	std::string s2 = "0 0 162";
 	EXPECT_STREQ(s2.c_str(),temp.c_str());
 	Messenger::Instance().sentMessages.pop();
 }
 
 TEST(Messenger, CtrlRelease) {
-	Messenger::Instance().AddKeyboardMessage(257, 0, 162);
+	Messenger::Instance().AddKeyboardMessage(257, 162);
 	std::string temp = Messenger::Instance().sentMessages.front();
-	std::string s2 = "0 2 0 162";
+	std::string s2 = "0 2 162";
 	EXPECT_STREQ(s2.c_str(), temp.c_str());
 	Messenger::Instance().sentMessages.pop();
 }

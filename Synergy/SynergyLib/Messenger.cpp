@@ -10,51 +10,47 @@ Messenger & Messenger::Instance()
 	return instance;
 }
 
-void Messenger::AddKeyboardMessage(WPARAM wParam, LPARAM lParam, int vkCode)
+void Messenger::AddKeyboardMessage(WPARAM wParam, const int& vkCode)
 {
 	std::string action = std::to_string(GetKeyBoardAction(wParam));
-	std::string lparam = std::to_string(lParam);
 	std::string kcode = std::to_string(vkCode);
-	std::string message = "0 " + action + ' ' + lparam + ' ' + kcode + '\0';
+	std::string message = "0 " + action + ' ' + kcode + '\0';
 	sentMessages.push(message);
 }
 
 void Messenger::AddMouseMessage(WPARAM wParam, LPARAM lParam, POINT p)
 {
 	std::string action = std::to_string(GetMouseAction(wParam));
-	std::string delta;
 	std::string message;
-	std::string lparam = std::to_string(lParam);
 	if (wParam == WM_MOUSEWHEEL)
 	{
 		MSLLHOOKSTRUCT *mouseHook = (MSLLHOOKSTRUCT*)lParam;
 		short wheelDelta = HIWORD(mouseHook->mouseData);
-		delta = std::to_string(wheelDelta);
-		message = "2 " + action + ' ' + lparam + ' ' + delta + '\0';
+		message = SetMessageMouseScroll(action, wheelDelta);
 	}
 	else
 	{
 		MOUSEHOOKSTRUCT * pMouseStruct = (MOUSEHOOKSTRUCT *)lParam;
 		short dx = pMouseStruct->pt.x - p.x;
 		short dy = pMouseStruct->pt.y - p.y;
-		delta = std::to_string(dx) + ' ' + std::to_string(dy);
-		message = "1 " + action + ' ' + lparam + ' ' + delta + '\0';
+		message = SetMessageMouseAction(action, dx, dy);
 	}
 	sentMessages.push(message);
+}
+
+std::string Messenger::SetMessageMouseScroll(const std::string & action, const short & delta)
+{
+	return "2 " + action + ' ' + std::to_string(delta) + '\0';
+}
+
+std::string Messenger::SetMessageMouseAction(const std::string & action, const int & dx, const int & dy)
+{
+	return "1 " + action + ' ' + std::to_string(dx) + ' ' + std::to_string(dy) + '\0';
 }
 
 void Messenger::AddOutOfBorderMessage(const std::string & side, float ratio)
 {
 	sentMessages.push(side + std::to_string(ratio) + '\0');
-}
-
-Messenger::Messenger()
-{
-}
-
-
-Messenger::~Messenger()
-{
 }
 
 int Messenger::GetKeyBoardAction(WPARAM wParam)
