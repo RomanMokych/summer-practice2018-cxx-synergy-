@@ -29,7 +29,7 @@ void BoostServer::handle_accept(TCP_connection::pointer new_connection, const bo
 			std::cout << connections.find(std::make_pair(x, y))->first.first << " " << connections.find(std::make_pair(x, y))->first.second << std::endl;
 		}
 		catch (std::exception&ex)
-		{
+		{                                                                
 			std::cout << ex.what() << std::endl;
 		}
 		if (WaitConnect())

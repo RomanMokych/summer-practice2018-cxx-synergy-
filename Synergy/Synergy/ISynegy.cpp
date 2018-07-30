@@ -2,17 +2,17 @@
 
 
 
-ISynergy::ISynergy()
+Synergy::Synergy()
 {
 }
 
 
-ISynergy::~ISynergy()
+Synergy::~Synergy()
 {
 }
 
 
-void ISynergy::MainMenu() {
+void Synergy::MainMenu() {
 
 	cout << "Welcome to Synergy!" << endl;
 	cout << "Set the role in the session :" << endl;
@@ -34,7 +34,7 @@ void ISynergy::MainMenu() {
 
 }
 
-void ISynergy::ServerMode() {
+void Synergy::ServerMode() {
 	cout << "Server mode :" << endl;
 	try
 	{
@@ -46,19 +46,19 @@ void ISynergy::ServerMode() {
 		boost::asio::io_service io_service;
 		BoostServer server(io_service);
 		
-		//FreeConsole();
+		FreeConsole();
 		io_service.run();
 		mouseThread.join();
 		keyboardThread.join();
 	}
 	catch (const std::exception &ex)
 	{
-		std::cout << ex.what() << std::endl;
+		std::cout << "Somethnig went wrong ."<< std::endl;
 	}
 
 
 }
-void ISynergy::ClientMode() {
+void Synergy::ClientMode() {
 	boost::system::error_code er;
 
 	cout << "Client mode : " << endl;
@@ -87,6 +87,6 @@ void ISynergy::ClientMode() {
 
 
 
-int ISynergy::choice = 10;
-string ISynergy::server_ip_adress = " ";
+int Synergy::choice = 10;
+string Synergy::server_ip_adress = " ";
 

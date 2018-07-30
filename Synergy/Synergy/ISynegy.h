@@ -13,14 +13,14 @@
 using namespace std;
 
 
-static class ISynergy
+static class Synergy
 {
 	static int choice ;
 	static string server_ip_adress;
 
 public:
-	ISynergy();
-	~ISynergy();
+	Synergy();
+	~Synergy();
 	static void MainMenu();
 	static void ServerMode();
 	static void ClientMode();
