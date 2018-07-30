@@ -4,11 +4,21 @@ typedef std::shared_ptr<TCP_connection> pointer;
 
 TCP_connection::TCP_connection(boost::asio::io_service& io_service) : socket_(io_service) {}
 
-void TCP_connection::handle_read(const boost::system::error_code &, size_t)
+void TCP_connection::handle_read(const boost::system::error_code &error, size_t)
 {
-	std::cout << Messenger::Instance().recievedMessage << std::endl;
-	Emulator::ParseMSG(Messenger::Instance().recievedMessage);
-	ContinueReading();
+	if (!error)
+	{
+		std::cout << Messenger::Instance().recievedMessage << std::endl;
+		Emulator::ParseMSG(Messenger::Instance().recievedMessage);
+		ContinueReading();
+	}
+	else
+	{
+		std::cout << "Client disconnected" << std::endl;
+		InputHandler::Instance().hasConnection = false;
+		InputHandler::Instance().isCurrentComputerDisabled = false;
+		return;
+	}
 }
 
 void TCP_connection::ContinueReading()
