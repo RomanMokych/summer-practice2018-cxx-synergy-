@@ -6,24 +6,29 @@ TCP_connection::TCP_connection(boost::asio::io_service& io_service) : socket_(io
 
 void TCP_connection::handle_read(const boost::system::error_code &, size_t)
 {
+	std::cout << Messenger::Instance().recievedMessage << std::endl;
 	Emulator::ParseMSG(Messenger::Instance().recievedMessage);
+	ContinueReading();
 }
 
 void TCP_connection::ContinueReading()
 {
-	try
+	if (InputHandler::Instance().hasConnection)
 	{
-		socket().async_read_some(
-			boost::asio::buffer(Messenger::Instance().recievedMessage),
-			boost::bind(&TCP_connection::handle_read, shared_from_this(),
-				boost::asio::placeholders::error, boost::asio::placeholders::bytes_transferred));
-	}
-	catch (std::exception &ex)
-	{
-		std::cout << "Client disconnected" << std::endl;
-		InputHandler::Instance().hasConnection = false;
-		InputHandler::Instance().isCurrentComputerDisabled = false;
-		return;
+		try
+		{
+			socket().async_read_some(
+				boost::asio::buffer(Messenger::Instance().recievedMessage),
+				boost::bind(&TCP_connection::handle_read, shared_from_this(),
+					boost::asio::placeholders::error, boost::asio::placeholders::bytes_transferred));
+		}
+		catch (std::exception &ex)
+		{
+			std::cout << "Client disconnected" << std::endl;
+			InputHandler::Instance().hasConnection = false;
+			InputHandler::Instance().isCurrentComputerDisabled = false;
+			return;
+		}
 	}
 }
 

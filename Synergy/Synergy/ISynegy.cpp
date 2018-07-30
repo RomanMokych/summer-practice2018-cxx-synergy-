@@ -68,8 +68,6 @@ void ISynergy::ClientMode() {
 		cin >> server_ip_adress;
 		boost::asio::ip::address::from_string(server_ip_adress, er);
 	} while (er);
-
-
 	
 	boost::asio::ip::tcp::endpoint endpoint(boost::asio::ip::address::from_string(server_ip_adress), 8080);
 	std::thread mouseThread(&InputHandler::ClientMouseLogger, std::ref(InputHandler::Instance()));
