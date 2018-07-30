@@ -28,6 +28,7 @@ void ISynergy::MainMenu() {
 	}
 	else {
 		cerr << "Wrong input " << endl;
+		system("pause");
 		exit(1);
 	}
 
@@ -58,9 +59,17 @@ void ISynergy::ServerMode() {
 
 }
 void ISynergy::ClientMode() {
+	boost::system::error_code er;
+
 	cout << "Client mode : " << endl;
-	cout << "Set IP-adress of the server : ";
-	cin >> server_ip_adress;
+	do
+	{
+		cout << "Set IP-adress of the server : ";
+		cin >> server_ip_adress;
+		boost::asio::ip::address::from_string(server_ip_adress, er);
+	} while (er);
+
+
 	
 	boost::asio::ip::tcp::endpoint endpoint(boost::asio::ip::address::from_string(server_ip_adress), 8080);
 	std::thread mouseThread(&InputHandler::ClientMouseLogger, std::ref(InputHandler::Instance()));

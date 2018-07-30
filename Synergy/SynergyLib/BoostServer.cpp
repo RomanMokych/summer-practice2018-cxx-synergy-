@@ -113,8 +113,13 @@ BoostServer::BoostServer(boost::asio::io_service & io_service) : acceptor_(io_se
 void BoostServer::Position(TCP_connection::pointer new_connection, int &X, int &Y)
 {
 
-	std::cout << "Client " << new_connection->socket().remote_endpoint().address().to_string() << " connected. Set position(X;Y) : ";
-	std::cin >> X >> Y;
+	do
+	{
+		system("cls");
+		std::cout << "Client " << new_connection->socket().remote_endpoint().address().to_string() << " connected. Set position(X;Y) : ";
+		std::cin.clear();
+		std::cin >> X >> Y;
+	} while (!((X||Y) && (std::cin.good())));
 
 }
 
