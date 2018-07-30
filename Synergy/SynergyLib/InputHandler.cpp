@@ -136,32 +136,32 @@ bool InputHandler::MouseMoveEventToBorderEvent(const POINT& currentMousePosition
 			mousePosition.x == 0 &&
 			neighbours[3] != "0")
 		{
+			Messenger::Instance().AddOutOfBorderMessage("3 ", (float)mousePosition.y / screenHeight);
 			isCurrentComputerDisabled = true;
-			Messenger::Instance().AddOutOfBorderMessage("3 ", (float)currentMousePosition.y / screenHeight);
 			return true;
 		}
 		if (currentMousePosition.x - mousePosition.x > 0 &&
 			mousePosition.x == screenWidth - 1 &&
 			neighbours[1] != "0")
 		{
+			Messenger::Instance().AddOutOfBorderMessage("4 ", (float)mousePosition.y / screenHeight);
 			isCurrentComputerDisabled = true;
-			Messenger::Instance().AddOutOfBorderMessage("4 ", (float)currentMousePosition.y / screenHeight);
 			return true;
 		}
 		if (currentMousePosition.y - mousePosition.y < 0 &&
 			mousePosition.y == 0 &&
 			neighbours[0] != "0")
 		{
+			Messenger::Instance().AddOutOfBorderMessage("5 ", (float)mousePosition.x / screenWidth);
 			isCurrentComputerDisabled = true;
-			Messenger::Instance().AddOutOfBorderMessage("5 ", (float)currentMousePosition.x / screenWidth);
 			return true;
 		}
 		if (currentMousePosition.y - mousePosition.y > 0 &&
 			mousePosition.y == screenHeight - 1 &&
 			neighbours[2] != "0")
 		{
+			Messenger::Instance().AddOutOfBorderMessage("6 ", (float)mousePosition.x / screenWidth);
 			isCurrentComputerDisabled = true;
-			Messenger::Instance().AddOutOfBorderMessage("6 ", (float)currentMousePosition.x / screenWidth);
 			return true;
 		}
 	}

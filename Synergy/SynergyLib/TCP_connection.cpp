@@ -69,7 +69,6 @@ void TCP_connection::start()
 		{
 			try
 			{
-
 				boost::asio::write(socket(),
 					boost::asio::buffer(Messenger::Instance().sentMessages.front()));
 				Messenger::Instance().sentMessages.pop();
